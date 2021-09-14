@@ -11,7 +11,7 @@ export let boardsManager = {
       const content = boardBuilder(board);
       domManager.addChild("#root", content);
       domManager.addEventListener(
-        `.toggle-board-button[data-board-id="${board.id}"]`,
+        `#showContent[data-board-id="${board.id}"]`,
         "click",
         showHideButtonHandler
       );
@@ -21,15 +21,17 @@ export let boardsManager = {
 
 function showHideButtonHandler(clickEvent) {
   const boardId = clickEvent.target.dataset.boardId;
-  const element = document.querySelector(`.toggle-board-button[data-board-id='${boardId}']`)
-  const contentToHide = document.querySelector(`#content-Row[data-board-id="${boardId}"]`)
-  if (element.innerText === "Show Cards") {
+  const element = document.querySelector(`#showContent[data-board-id='${boardId}']`)
+  const contentToHide = document.querySelector(`#content-row-container[data-board-id="${boardId}"]`)
+  const statusesToHide = document.querySelector(`#statuses-row-container[data-board-id="${boardId}"]`)
+  if (element.innerText === "v Show Cards") {
       cardsManager.loadCards(boardId);
-      element.innerText = "Hide Cards"
+      element.innerText = "^ Hide Cards"
   }
   else {
       contentToHide.hidden = true
       contentToHide.innerHTML = ""
-      element.innerText = "Show Cards"
+      statusesToHide.innerHTML = ""
+      element.innerText = "v Show Cards"
   }
 }

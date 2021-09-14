@@ -19,31 +19,33 @@ export function htmlFactory(template) {
 }
 
 function boardBuilder(board) {
-    return ` <div class="container">
-  <div class="row justify-content-md-between bg-light" id="header-Row" data-board-id="${board.id}">
-      <div class="col col-lg-2"><button type="button" class="btn btn-outline-dark"> Cards</button>
+    return ` <br><div class="container">
+  <div class="row bg-light" id="header-Row" data-board-id="${board.id}">
+      <div class="col h3 margin_header" id="board-title">${board.title}
     </div>
-    <div class="col-lg-2 h4">${board.title}
+    <div class="col-md-auto margin_header"><button type="button" class="btn btn-outline-dark btn-sm">+ Add Card</button>
     </div>
-      <div class="col col-lg-2"><button type="button" class="toggle-board-button" data-board-id="${board.id}">Show Cards</button>
+      <div class="col col-lg-2 margin_header"><button type="button" class="btn btn-outline-dark btn-sm" id="showContent" data-board-id="${board.id}">v Show Cards</button>
     </div>
   </div> 
-  <div class="row" data-board-id="${board.id}" id ="content-Row" hidden>
+  <div class="row" data-board-id="${board.id}" id ="statuses-row-container" hidden>
   </div>
-  </div>`;
+  <div class="row" data-board-id="${board.id}" id="content-row-container" hidden>
+</div>
+  </div><br>`;
 }
 
 function cardBuilder(card) {
-    // document.querySelector(`.col[data-board-id='${card.board_id}']`).hidden = false
-    return `<div class="col border-right border-secondary" id=data-card-id="${card.id}">
+    return `<div id=data-card-id="${card.id}" class="cards border border-info rounded">
       ${card.title}
     </div>`;
 }
 
 function columnBuilder(column,boardId) {
-    document.querySelector(`#content-Row[data-board-id='${boardId}']`).hidden = false
-    return `<div class="col border-right border-secondary" data-column-id="${column.id}" data-board-id="${boardId}">
-      ${column.title}
-    </div>`;
-}
+    document.querySelector(`#statuses-row-container[data-board-id='${boardId}']`).hidden = false
+    document.querySelector(`#content-row-container[data-board-id='${boardId}']`).hidden = false
+    return [`<div class="col border-right border-secondary bg-info" data-column-id="${column.id}" data-board-id="${boardId}">
+     <div id="status-title">${column.title}</div>
+    </div>`, `<div class = "col" data-column-id="${column.id}" id="content-columns-container" data-board-id="${boardId}"></div>`];
+    }
 
