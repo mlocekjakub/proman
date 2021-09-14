@@ -130,3 +130,18 @@ section.board{
 .card-title{
     padding-right: 16px;
 }
+.container {
+    text-align: center;
+    width: 60%;
+}
+#content-Row {
+    height:50vh;
+    background: #E8E9EB;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+#header-Row {
+    background: whitesmoke;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}

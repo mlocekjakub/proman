@@ -13,6 +13,32 @@
 
 {% block content %}
     <div id="root"></div>
+    <br><br>
+
+    <div class="container">
+  <div class="row justify-content-md-between bg-light" id="header-Row">
+      <div class="col col-lg-2"><button type="button" class="btn btn-outline-dark">Add Cards</button>
+    </div>
+    <div class="col-lg-2 h4">board 1
+    </div>
+      <div class="col col-lg-2"><button type="button" class="btn btn-outline-dark">Hide board</button>
+    </div>
+  </div>
+  <div class="row" id ="content-Row">
+    <div class="col border-right border-secondary">
+      new
+    </div>
+    <div class="col border-right border-secondary">
+      in progress
+    </div>
+    <div class="col border-right border-secondary">
+      testing
+    </div>
+      <div class="col">
+      done
+      </div>
+  </div>
+</div>
 
 
 {% endblock %}

@@ -22,15 +22,14 @@ export let boardsManager = {
 function showHideButtonHandler(clickEvent) {
   const boardId = clickEvent.target.dataset.boardId;
   const element = document.querySelector(`.toggle-board-button[data-board-id='${boardId}']`)
+  const contentToHide = document.querySelector(`#content-Row[data-board-id="${boardId}"]`)
   if (element.innerText === "Show Cards") {
-    cardsManager.loadCards(boardId);
-    element.innerText = "Hide Cards"
+      cardsManager.loadCards(boardId);
+      element.innerText = "Hide Cards"
   }
   else {
-    const hideCards = document.querySelector(`.board[data-board-id="${boardId}"]`)
-    while (hideCards.childNodes.length > 1) {
-      hideCards.removeChild(hideCards.lastChild);
-      }
+      contentToHide.hidden = true
+      contentToHide.innerHTML = ""
       element.innerText = "Show Cards"
   }
 }
