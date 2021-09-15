@@ -36,7 +36,7 @@ function boardBuilder(board) {
 }
 
 function cardBuilder(card) {
-    return `<div id=data-card-id="${card.id}" class="cards border border-info rounded">
+    return `<div data-card-id="${card.id}" class="cards border border-info rounded">
       ${card.title}
     </div>`;
 }
