@@ -15,6 +15,27 @@ export let boardsManager = {
         "click",
         showHideButtonHandler
       );
+      // do kolumn pozniej
+      domManager.addEventListener(
+        ".board",
+        "drop",
+        handleDrop
+      );
+      domManager.addEventListener(
+        `.board`,
+        "dragover",
+        handleDragOver
+      );
+      domManager.addEventListener(
+        `.board`,
+        "dragenter",
+        handleDragEnter
+      );
+      domManager.addEventListener(
+        `.board`,
+        "dragleave",
+        handleDragLeave
+      );
     }
   },
 };
@@ -22,4 +43,34 @@ export let boardsManager = {
 function showHideButtonHandler(clickEvent) {
   const boardId = clickEvent.target.dataset.boardId;
   cardsManager.loadCards(boardId);
+}
+
+let i = 0
+function handleDragOver(e) {
+  e.preventDefault();
+  if(i==0) {
+    i++;
+    e.target.insertAdjacentHTML("afterend", `<div id="drop-over">&nbsp</div>`);
+  }
+}
+
+function handleDragEnter(e) {
+}
+
+function handleDragLeave(e) {
+  if(i==1){
+    i--;
+    let div = document.getElementById("drop-over");
+    div.remove()
+  }
+}
+
+function handleDrop(e) {
+  e.preventDefault()
+  let div = document.getElementById("drop-over");
+  div.remove()
+  e.target.insertAdjacentHTML("afterend",cardsManager.dragItem)
+  console.log(cardsManager.dragItem)
+  cardsManager.dragItem= null
+  console.log("drop "+e);
 }
