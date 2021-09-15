@@ -44,7 +44,7 @@ function cardBuilder(card) {
 function columnBuilder(column,boardId) {
     document.querySelector(`#statuses-row-container[data-board-id='${boardId}']`).hidden = false
     document.querySelector(`#content-row-container[data-board-id='${boardId}']`).hidden = false
-    return [`<div class="col border-right border-secondary bg-info" data-column-id="${column.id}" data-board-id="${boardId}">
+    return [`<div class="col border-right border-secondary" style="background-color: #6F8FAF" data-column-id="${column.id}" data-board-id="${boardId}">
      <div id="status-title">${column.title}</div>
     </div>`, `<div class = "col" data-column-id="${column.id}" id="content-columns-container" data-board-id="${boardId}"></div>`];
     }
