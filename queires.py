@@ -1,4 +1,5 @@
 import data_manager
+import connection
 
 
 def get_card_status(status_id):
@@ -15,6 +16,20 @@ def get_card_status(status_id):
         """
         , {"status_id": status_id})
 
+    return status
+
+
+def get_statuses_for_board(board_id):
+    status = data_manager.execute_select(
+    """
+    SELECT statuses.id, statuses.title FROM statuses
+    JOIN cards on statuses.id = cards.status_id
+    JOIN boards on cards.board_id = %(board_id)s
+    group by statuses.id
+    order by statuses.id ASC
+    ;
+    """
+        , {"board_id": board_id})
     return status
 
 
@@ -45,3 +60,46 @@ def get_cards_for_board(board_id):
         , {"board_id": board_id})
 
     return matching_cards
+
+
+@connection.connection_handler
+def check_if_user_in_database(cursor, email):
+    query = f""" SELECT * 
+                FROM users 
+                WHERE username = '{email}'
+
+            """
+    cursor.execute(query)
+    result = cursor.fetchone()
+    return result
+
+
+@connection.connection_handler
+def find_user_id_by_email(cursor, email):
+    query = f"""SELECT id
+                FROM users
+                WHERE username = '{email}'
+            """
+    cursor.execute(query)
+    return cursor.fetchone()
+
+
+@connection.connection_handler
+def save_user(cursor, email, password):
+    query = f"""INSERT INTO users(username,password)
+                VALUES  ('{email}', '{password}')  
+
+            """
+    return cursor.execute(query)
+
+
+@connection.connection_handler
+def get_password_by_email(cursor, email):
+    query = f"""SELECT password
+                FROM users
+                WHERE username = '{email}' 
+            """
+    cursor.execute(query)
+    result = cursor.fetchone()
+    return result
+
