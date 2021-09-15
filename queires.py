@@ -38,8 +38,6 @@ def get_boards():
     Gather all boards
     :return:
     """
-    # remove this code once you implement the database
-
     return data_manager.execute_select(
         """
         SELECT * FROM boards
