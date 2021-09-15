@@ -44,6 +44,12 @@ def delete_card_from_board(board_id: int, card_id: int):
     return
 
 
+@app.route("/api/statuses/<int:board_id>")
+@json_response
+def get_statuses_for_board(board_id: int):
+    return queires.get_statuses_for_board(board_id)
+
+
 def main():
     app.run(debug=True)
 

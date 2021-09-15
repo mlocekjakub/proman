@@ -14,5 +14,5 @@ export let domManager = {
     } else {
       console.error("could not find such html element: " + parentIdentifier);
     }
-  },
+  }
 };

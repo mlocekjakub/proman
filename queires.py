@@ -19,14 +19,25 @@ def get_card_status(status_id):
     return status
 
 
+def get_statuses_for_board(board_id):
+    status = data_manager.execute_select(
+    """
+    SELECT statuses.id, statuses.title FROM statuses
+    JOIN cards on statuses.id = cards.status_id
+    JOIN boards on cards.board_id = %(board_id)s
+    group by statuses.id
+    order by statuses.id ASC
+    ;
+    """
+        , {"board_id": board_id})
+    return status
+
+
 def get_boards():
     """
     Gather all boards
     :return:
     """
-    # # remove this code once you implement the database
-    # return [{"title": "board1", "id": 1}, {"title": "board2", "id": 2}]
-
     return data_manager.execute_select(
         """
         SELECT * FROM boards
