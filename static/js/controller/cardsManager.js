@@ -96,7 +96,7 @@ function changeNameOfCard(e){
     let tempInnerHTML = e.target;
     let card_id = tempInnerHTML.getAttribute("data-card-id")
     let value = e.target.innerText
-    e.target.innerHTML = `<div><form action="/api/board/cards/name/${card_id}" method="post" ><input class="trans" name="title" value="${value}"></form></div>`
+    e.target.innerHTML = `<div><form action="/" method="post" ><input class="trans" name="title" value="${value}"></form></div>`
 }
 
 function deferredOriginChanges(origin, dragFeedbackClassName) {

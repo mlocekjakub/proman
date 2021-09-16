@@ -13,7 +13,7 @@ load_dotenv()
 app.secret_key = "GoodAfternoonVietnam"
 
 
-@app.route("/")
+@app.route("/", methods=['POST'])
 def index():
     """
     This is a one-pager which shows all the boards and cards
