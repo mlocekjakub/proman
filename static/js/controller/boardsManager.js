@@ -15,12 +15,26 @@ export let boardsManager = {
         "click",
         showHideButtonHandler
       );
+      domManager.addEventListener(`#create-board-button`,
+          "click",
+          openNewBoardModal
+      );
+      domManager.addEventListener(`#add-card[data-board-id="${board.id}"]`,
+          "click",
+          openNewCardModal
+      );
+      domManager.addEventListener("#form-board",
+          "submit",
+          dataHandler.createNewBoard
+      );
+      domManager.addEventListener("#form-card",
+          "submit",
+          dataHandler.createNewCard)
       domManager.addEventListener(
           `#deleteBoardButton[data-board-id="${board.id}"]`,
           "click",
           deleteBoardButtonHandler
       );
-      // do kolumn pozniej
       domManager.addEventListener(
         `#content-row-container[data-board-id="${board.id}"]`,
         "drop",
@@ -50,11 +64,14 @@ function showHideButtonHandler(clickEvent) {
   const element = document.querySelector(`#showContent[data-board-id='${boardId}']`)
   const contentToHide = document.querySelector(`#content-row-container[data-board-id="${boardId}"]`)
   const statusesToHide = document.querySelector(`#statuses-row-container[data-board-id="${boardId}"]`)
+  const addCardButton = document.querySelector(`#add-card[data-board-id="${boardId}"]`)
   if (element.innerText === "v Show Cards") {
       cardsManager.loadCards(boardId);
+      addCardButton.hidden = false
       element.innerText = "^ Hide Cards"
   }
   else {
+      addCardButton.hidden = true
       contentToHide.hidden = true
       contentToHide.innerHTML = ""
       statusesToHide.innerHTML = ""
@@ -114,3 +131,31 @@ function handleDrop(e) {
   div.remove();
   cardsManager.dragItem = null;
 }
+
+
+function openNewBoardModal() {
+    let newBoardModal = document.getElementById("new-board-modal")
+    let newCardForm = document.getElementById("form-card")
+    let newBoardForm = document.getElementById("form-board")
+    let modalTitle = document.getElementById("exampleModalLabel")
+    newBoardForm.hidden = false
+    newCardForm.hidden = true
+    modalTitle.innerText = "Create new board"
+    $(newBoardModal).modal();
+}
+
+function openNewCardModal(e) {
+  let newCardModal = document.getElementById("new-board-modal")
+  let newCardForm = document.getElementById("form-card")
+  let newBoardForm = document.getElementById("form-board")
+  let modalTitle = document.getElementById("exampleModalLabel")
+  let boardId = e.target.dataset.boardId;
+  newCardForm.setAttribute("data-board-id", boardId)
+  newCardForm.hidden = false
+  newBoardForm.hidden = true
+  modalTitle.innerText = "Create new card"
+  $(newCardModal).modal();
+
+
+}
+

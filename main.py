@@ -60,6 +60,30 @@ def delete_card_from_board(card_id: int):
         queires.change_card_status(card_id, status_id, card_order)
 
 
+@app.route("/api/board/cards/name/<int:card_id>", methods=["POST"])
+@json_response
+def change_cards_name(card_id: int):
+    if request.method == "POST":
+        title = request.form()["title"]
+        queires.change_card_name(card_id, title)
+
+
+@app.route("/api/boards/", methods=["POST"])
+@json_response
+def create_new_board():
+    board_title = request.get_json()
+    queires.add_new_board(board_title)
+
+
+@app.route("/api/boards/cards", methods=["POST"])
+@json_response
+def create_new_card():
+    card_title = request.get_json()["cardTitle"]
+    board_id = request.get_json()["boardId"]
+    card_order = queires.find_last_card_in_board_by_order(board_id)[0]['order']
+    queires.add_new_card(card_title, board_id, card_order)
+
+
 @app.route("/api/statuses/<int:board_id>")
 @json_response
 def get_statuses_for_board(board_id: int):
