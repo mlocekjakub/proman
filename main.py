@@ -72,8 +72,8 @@ def change_cards_name(card_id: int):
 @json_response
 def create_new_board():
     board_title = request.get_json()
+    print(board_title)
     queires.add_new_board(board_title)
-
 
 @app.route("/api/boards/cards", methods=["POST"])
 @json_response

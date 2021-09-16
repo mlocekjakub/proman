@@ -17,6 +17,8 @@ body{
 
 .container {
     width: 55%;
+    margin-bottom: 4vh;
+    margin-top: 4vh;
 }
 #content-row-container {
     height:50vh;
@@ -34,6 +36,7 @@ body{
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
 }
+
 #status-title {
     text-align: center;
     font-family: Verdana, sans-serif;
@@ -57,16 +60,18 @@ body{
     color : #ddd;
     border-color: black;
 }
-
 .dragged {
   opacity: 0;
 }
 
-/* Drag feedback image style */
 .drag-feedback {
     opacity: 1;
     border: 1px solid dodgerblue;
 }
-#icon {
-    border: none;
+#deleteBoardButton:hover {
+    cursor: pointer;
+    transform: scale(1.5);
+}
+#create-board-button {
+    cursor: pointer;
 }

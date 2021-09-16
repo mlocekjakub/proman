@@ -1,4 +1,4 @@
-import {cardsManager} from "../controller/cardsManager";
+import {boardsManager} from "../controller/boardsManager.js";
 
 export let dataHandler = {
   getBoards: async function () {
@@ -41,21 +41,22 @@ export let dataHandler = {
       }
         try {
             await postData(url, title)
-                .then (response => {
+                .then (() => {
                     document.getElementById("form-board").hidden = true
                     boardHeader.innerText = "successfully added board"
                     boardHeader.style.color = "#4BB543"
-                    setTimeout(function(){ this.reloadBoards() }, 1000);
-                    // this.reloadBoards()
+                    setTimeout(function(){dataHandler.reloadBoards(); }, 1000);
                 });
         }catch (error){
 	        console.log(error);
         }
   },
-    reloadBoards: async function (e) {
-    let page = document.getElementById("root")
+    reloadBoards: async function () {
+      let page = document.getElementById("root")
+        let modal = document.getElementById("new-board-modal")
         page.innerHTML = ""
-        await cardsManager.loadCards()
+        $(modal).modal('hide')
+      await boardsManager.loadBoards()
     },
   createNewCard: async function (e) {
       e.preventDefault()
@@ -63,8 +64,6 @@ export let dataHandler = {
       let cardHeader = document.getElementById("exampleModalLabel")
       const form = e.currentTarget
       let boardId = form.getAttribute("data-board-id")
-      console.log(boardId)
-      console.log(title)
       const url = form.action;
       let formData = {"cardTitle": title, "boardId": boardId}
       if (!title) {
@@ -73,17 +72,17 @@ export let dataHandler = {
       }
         try {
             await postData(url, formData)
-                .then (response => {
+                .then (() => {
                     document.getElementById("form-card").hidden = true
                     cardHeader.innerText = "successfully added card"
                     cardHeader.style.color = "#4BB543"
-                    setTimeout(function(){ this.reloadBoards(); }, 1000);
+                    setTimeout(function(){ dataHandler.reloadBoards();
+                        }, 1000);
 
                 });
         }catch (error){
 	        console.log(error);
         }
-  //   // creates new card, saves it and calls the callback function with its data
   },
     changeStatus: async function (cardId, data) {
         const response = await apiPut(`/api/boards/cards/${cardId}`, data)

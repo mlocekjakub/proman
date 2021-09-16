@@ -5,6 +5,17 @@ import { cardsManager } from "./cardsManager.js";
 
 export let boardsManager = {
   loadBoards: async function () {
+    domManager.addEventListener(`#create-board-button`,
+          "click",
+          openNewBoardModal
+      );
+    domManager.addEventListener("#form-board",
+          "submit",
+          dataHandler.createNewBoard
+      );
+    domManager.addEventListener("#form-card",
+          "submit",
+          dataHandler.createNewCard)
     const boards = await dataHandler.getBoards();
     for (let board of boards) {
       const boardBuilder = htmlFactory(htmlTemplates.board);
@@ -15,17 +26,9 @@ export let boardsManager = {
         "click",
         showHideButtonHandler
       );
-      domManager.addEventListener(`#create-board-button`,
-          "click",
-          openNewBoardModal
-      );
       domManager.addEventListener(`#add-card[data-board-id="${board.id}"]`,
           "click",
           openNewCardModal
-      );
-      domManager.addEventListener("#form-board",
-          "submit",
-          dataHandler.createNewBoard
       );
       domManager.addEventListener("#form-card",
           "submit",
@@ -65,17 +68,18 @@ function showHideButtonHandler(clickEvent) {
   const contentToHide = document.querySelector(`#content-row-container[data-board-id="${boardId}"]`)
   const statusesToHide = document.querySelector(`#statuses-row-container[data-board-id="${boardId}"]`)
   const addCardButton = document.querySelector(`#add-card[data-board-id="${boardId}"]`)
-  if (element.innerText === "v Show Cards") {
+  console.log(element.innerHTML)
+  if (element.innerHTML === "<i class=\"bi bi-chevron-double-down\"></i> Show") {
       cardsManager.loadCards(boardId);
-      addCardButton.hidden = false
-      element.innerText = "^ Hide Cards"
+      addCardButton.parentNode.hidden = false
+      element.innerHTML = "<i class=\"bi bi-chevron-double-up\"></i> Hide"
   }
   else {
-      addCardButton.hidden = true
+      addCardButton.parentNode.hidden = true
       contentToHide.hidden = true
       contentToHide.innerHTML = ""
       statusesToHide.innerHTML = ""
-      element.innerText = "v Show Cards"
+      element.innerHTML = "<i class=\"bi bi-chevron-double-down\"></i> Show"
   }
 }
 
@@ -140,6 +144,7 @@ function openNewBoardModal() {
     let modalTitle = document.getElementById("exampleModalLabel")
     newBoardForm.hidden = false
     newCardForm.hidden = true
+    modalTitle.style.color = "black"
     modalTitle.innerText = "Create new board"
     $(newBoardModal).modal();
 }
@@ -153,9 +158,8 @@ function openNewCardModal(e) {
   newCardForm.setAttribute("data-board-id", boardId)
   newCardForm.hidden = false
   newBoardForm.hidden = true
+  modalTitle.style.color = "black"
   modalTitle.innerText = "Create new card"
   $(newCardModal).modal();
-
-
 }
 
