@@ -43,7 +43,7 @@ export let dataHandler = {
                     document.getElementById("form-board").hidden = true
                     boardHeader.innerText = "successfully added board"
                     boardHeader.style.color = "#4BB543"
-                    setTimeout(function(){ window.location.href="/"; }, 1000);
+                    setTimeout(function(){ this.reloadBoards() }, 1000);
                     // this.reloadBoards()
                 });
         }catch (error){
@@ -51,7 +51,6 @@ export let dataHandler = {
         }
   },
     reloadBoards: async function (e) {
-
     },
   createNewCard: async function (e) {
       e.preventDefault()
@@ -73,9 +72,8 @@ export let dataHandler = {
                     document.getElementById("form-card").hidden = true
                     cardHeader.innerText = "successfully added card"
                     cardHeader.style.color = "#4BB543"
-                    setTimeout(function(){ window.location.href="/"; }, 1000);
-                    // window.location.href="/";
-                    // this.reloadBoards()
+                    setTimeout(function(){ this.reloadBoards(); }, 1000);
+
                 });
         }catch (error){
 	        console.log(error);
