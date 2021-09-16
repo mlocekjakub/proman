@@ -1,3 +1,5 @@
+import {boardsManager} from "../controller/boardsManager";
+
 export let dataHandler = {
   getBoards: async function () {
     const response = await apiGet("/api/boards");
@@ -44,15 +46,16 @@ export let dataHandler = {
                     document.getElementById("form-board").hidden = true
                     boardHeader.innerText = "successfully added board"
                     boardHeader.style.color = "#4BB543"
-                    setTimeout(function(){ window.location.href="/"; }, 1000);
-                    // this.reloadBoards()
+                    setTimeout(function(){ this.reloadBoards(); }, 1000);
                 });
         }catch (error){
 	        console.log(error);
         }
   },
     reloadBoards: async function (e) {
-
+      let page = document.getElementById("root");
+      page.innerHTML = ""
+      await boardsManager.loadBoards()
     },
   createNewCard: async function (e) {
       e.preventDefault()
@@ -74,9 +77,8 @@ export let dataHandler = {
                     document.getElementById("form-card").hidden = true
                     cardHeader.innerText = "successfully added card"
                     cardHeader.style.color = "#4BB543"
-                    setTimeout(function(){ window.location.href="/"; }, 1000);
-                    // window.location.href="/";
-                    // this.reloadBoards()
+                    setTimeout(function(){ this.reloadBoards(); }, 1000);
+
                 });
         }catch (error){
 	        console.log(error);
