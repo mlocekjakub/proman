@@ -1,3 +1,5 @@
+import {cardsManager} from "../controller/cardsManager";
+
 export let dataHandler = {
   getBoards: async function () {
     const response = await apiGet("/api/boards");
@@ -52,6 +54,9 @@ export let dataHandler = {
         }
   },
     reloadBoards: async function (e) {
+    let page = document.getElementById("root")
+        page.innerHTML = ""
+        await cardsManager.loadCards()
     },
   createNewCard: async function (e) {
       e.preventDefault()
