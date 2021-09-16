@@ -47,6 +47,23 @@ body{
     text-align: center;
     margin-top: 1vh;
     margin-bottom: 1vh;
+    background-color: white;
 
 }
 
+#drop-over {
+    border-style: dashed;
+    background: #ddd;
+    color : #ddd;
+    border-color: black;
+}
+
+.dragged {
+  opacity: 0;
+}
+
+/* Drag feedback image style */
+.drag-feedback {
+    opacity: 1;
+    border: 1px solid dodgerblue;
+}
