@@ -40,7 +40,7 @@ function boardBuilder(board) {
 function cardBuilder(card) {
     return `<div draggable="true" data-card-id="${card.id}" class="cards border border-info rounded">
       ${card.title}
-      <div><button type='button' id="deleteCardButton" class="btn btn-outline-dark btn-sm" data-card-id="${card.id}">X</button></div>
+      <button type='button' style="display: none;" id="deleteCardButton" data-card-id="${card.id}" >X</button>
     </div>`;
 }
 
