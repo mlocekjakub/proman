@@ -15,6 +15,11 @@ export let boardsManager = {
         "click",
         showHideButtonHandler
       );
+      domManager.addEventListener(
+          `#deleteBoardButton[data-board-id="${board.id}"]`,
+          "click",
+          deleteBoardButtonHandler
+      );
       // do kolumn pozniej
       domManager.addEventListener(
         "#content-row-container",
@@ -54,6 +59,18 @@ function showHideButtonHandler(clickEvent) {
       contentToHide.innerHTML = ""
       statusesToHide.innerHTML = ""
       element.innerText = "v Show Cards"
+  }
+}
+
+function deleteBoardButtonHandler (clickEvent) {
+  const boardId = clickEvent.target.dataset.boardId;
+  const rowsToDelete = document.getElementsByClassName('row' && 'bg-light')
+  for (let row of rowsToDelete) {
+    let rowId = row.getAttribute('data-board-id');
+    if (rowId === boardId) {
+      row.parentElement.remove();
+      dataHandler.deleteBoard(boardId);
+    }
   }
 }
 
