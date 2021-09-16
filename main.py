@@ -84,10 +84,10 @@ def create_new_card():
     queires.add_new_card(card_title, board_id, card_order)
 
 
-@app.route("/api/statuses/<int:board_id>")
+@app.route("/api/statuses")
 @json_response
-def get_statuses_for_board(board_id: int):
-    return queires.get_statuses_for_board(board_id)
+def get_statuses_for_board():
+    return queires.get_statuses_for_board()
 
 
 def main():
