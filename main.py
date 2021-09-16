@@ -1,9 +1,11 @@
-from flask import Flask, render_template, url_for, session, redirect, request
-from dotenv import load_dotenv
-from util import json_response
 import mimetypes
+
+from dotenv import load_dotenv
+from flask import Flask, render_template, url_for, session, redirect, request
+
 import queires
 import util
+from util import json_response
 
 mimetypes.add_type('application/javascript', '.js')
 app = Flask(__name__)
@@ -90,6 +92,11 @@ def login():
         else:
             return render_template('login.html', wrong_data=True)
     return render_template('login.html')
+
+
+@app.route('/api/change-status/<id_card>/<status_id>')
+def change_status(id_card, status_id):
+    queires.change_card_status(id_card, status_id)
 
 
 @app.route("/logout")
