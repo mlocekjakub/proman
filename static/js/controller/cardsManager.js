@@ -30,13 +30,25 @@ export let cardsManager = {
       const cardBuilder = htmlFactory(htmlTemplates.card);
       const content = cardBuilder(card);
       domManager.addChild(`#content-columns-container[data-column-id="${card.status_id}"][data-board-id="${card.board_id}"]`, content);
+      domManager.addEventListener(
+        `#deleteCardButton[data-card-id="${card.id}"]`,
+        "click",
+        deleteCardButtonHandler
+      );
       this.initEvents(card.id)
     }
     },
 };
 
-function deleteButtonHandler(clickEvent) {
-  console.log("click")
+function deleteCardButtonHandler(clickEvent) {
+  const cardId = clickEvent.target.dataset.cardId;
+  const cardsToDelete = document.getElementsByClassName('cards');
+  for (let card of cardsToDelete) {
+    if (cardId === card.getAttribute('data-card-id')) {
+      card.remove();
+      dataHandler.deleteCard(cardId);
+    }
+  }
 }
 
 function handleDragStart(e) {

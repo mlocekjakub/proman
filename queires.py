@@ -36,6 +36,36 @@ def get_boards():
     )
 
 
+@connection.connection_handler
+def delete_board(cursor, board_id):
+    query = """
+                DELETE FROM boards
+                WHERE id = %(b_i)s;
+            """
+    arguments = {"b_i": board_id}
+    cursor.execute(query, arguments)
+
+
+@connection.connection_handler
+def delete_cards_by_board(cursor, board_id):
+    query = """
+                DELETE FROM cards
+                WHERE board_id = %(b_i)s;
+            """
+    arguments = {"b_i": board_id}
+    cursor.execute(query, arguments)
+
+
+@connection.connection_handler
+def delete_card(cursor, card_id):
+    query = """
+                DELETE FROM cards
+                WHERE id = %(i)s;
+            """
+    arguments = {"i": card_id}
+    cursor.execute(query, arguments)
+
+
 def get_cards_for_board(board_id):
     # remove this code once you implement the database
     matching_cards = data_manager.execute_select(
