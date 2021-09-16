@@ -15,11 +15,11 @@ export let boardsManager = {
         "click",
         showHideButtonHandler
       );
-      domManager.addEventListener("#create-board-button",
+      domManager.addEventListener(`#create-board-button`,
           "click",
           openNewBoardModal
       );
-      domManager.addEventListener("#add-card",
+      domManager.addEventListener(`#add-card[data-board-id="${board.id}"]`,
           "click",
           openNewCardModal
       );
@@ -35,7 +35,6 @@ export let boardsManager = {
           "click",
           deleteBoardButtonHandler
       );
-      // do kolumn pozniej
       domManager.addEventListener(
         `#content-row-container[data-board-id="${board.id}"]`,
         "drop",
@@ -113,20 +112,24 @@ function handleDragLeave(e) {
 }
 
 function handleDrop(e) {
-  e.preventDefault()
+  e.preventDefault();
   let div = document.getElementById("drop-over");
-  div.parentNode.insertBefore(cardsManager.dragItem,div)
+  div.parentNode.insertBefore(cardsManager.dragItem,div);
+  let status_id = div.parentNode.getAttribute("data-column-id");
+  let board_id = div.parentNode.getAttribute("data-board-id");
+  let card_order = null
+  if(div.nextSibling){
+    card_order = div.nextSibling.getAttribute("data-cardorder-id");
+  }
+  else{
+    card_order = parseInt(div.previousSibling.getAttribute("data-cardorder-id")) + 1;
+  }
 
-  console.log(div.parentNode["data-column-id"])
-  div.remove()
-  // changeStatus()
-  cardsManager.dragItem = null
-}
-
-function changeStatus(card_id, status_id){
-  return fetch('/api/change-status/'+card_id+"/"+status_id, {
-        method: 'PUT'
-    }).then(response => "")
+  let card_id = cardsManager.dragItem.getAttribute("data-card-id");
+  let data = {"status_id": status_id, "card_order": card_order, "board_id":board_id}
+  dataHandler.changeStatus(card_id, data).then(r =>{});
+  div.remove();
+  cardsManager.dragItem = null;
 }
 
 

@@ -47,10 +47,25 @@ def delete_board(board_id: int):
     queires.delete_board(board_id)
 
 
-@app.route("/api/boards/cards/<int:card_id>", methods=["DELETE"])
+@app.route("/api/boards/cards/<int:card_id>", methods=["DELETE", "PUT"])
 @json_response
 def delete_card_from_board(card_id: int):
-    queires.delete_card(card_id)
+    if request.method == "DELETE":
+        queires.delete_card(card_id)
+    elif request.method == "PUT":
+        status_id = request.get_json()["status_id"]
+        board_id = request.get_json()["board_id"]
+        card_order = request.get_json()["card_order"]
+        queires.change_card_order(card_order, board_id)
+        queires.change_card_status(card_id, status_id, card_order)
+
+
+@app.route("/api/board/cards/name/<int:card_id>", methods=["POST"])
+@json_response
+def change_cards_name(card_id: int):
+    if request.method == "POST":
+        title = request.form()["title"]
+        queires.change_card_name(card_id, title)
 
 
 @app.route("/api/boards/", methods=["POST"])
@@ -115,11 +130,6 @@ def login():
         else:
             return render_template('login.html', wrong_data=True)
     return render_template('login.html')
-
-
-@app.route('/api/change-status/<id_card>/<status_id>')
-def change_status(id_card, status_id):
-    queires.change_card_status(id_card, status_id)
 
 
 @app.route("/logout")

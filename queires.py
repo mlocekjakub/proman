@@ -98,11 +98,11 @@ def delete_card(cursor, card_id):
 
 
 def get_cards_for_board(board_id):
-    # remove this code once you implement the database
     matching_cards = data_manager.execute_select(
         """
         SELECT * FROM cards
         WHERE cards.board_id = %(board_id)s
+        ORDER BY cards.card_order
         ;
         """
         , {"board_id": board_id})
@@ -122,15 +122,25 @@ def check_if_user_in_database(cursor, email):
 
 
 @connection.connection_handler
-def change_card_status(cursor, card_id, status_id):
+def change_card_status(cursor, card_id, status_id, card_order):
     query = """ 
-        UPDATE cards SET status_id = %(status_id)s 
+        UPDATE cards 
+        SET status_id = %(status_id)s, card_order = %(card_order)s
         WHERE id = %(card_id)s
-            """
-    arguments = {"card_id": card_id, "status_id": status_id}
+        """
+    arguments = {"card_id": card_id, "status_id": status_id, "card_order": card_order}
     cursor.execute(query, arguments)
-    result = cursor.fetchone()
-    return result
+
+
+@connection.connection_handler
+def change_card_order(cursor, card_order, board_id):
+    query = """
+    UPDATE cards
+    SET card_order = card_order + 1
+    where status_id = 1 and card_order >= %(card_order)s and board_id = %(board_id)s
+    """
+    arguments = {"card_order": card_order, "board_id": board_id}
+    cursor.execute(query, arguments)
 
 
 @connection.connection_handler
@@ -163,7 +173,3 @@ def get_password_by_email(cursor, email):
     cursor.execute(query, arguments)
     result = cursor.fetchone()
     return result
-
-
-
-

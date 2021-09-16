@@ -14,6 +14,26 @@ export let cardsManager = {
             "dragend",
             handleDragEnd
         );
+        domManager.addEventListener(
+                `#deleteCardButton[data-card-id="${card_id}"]`,
+                "click",
+                deleteCardButtonHandler
+            );
+        domManager.addEventListener(
+            `.cards[data-card-id="${card_id}"]`,
+            "mouseover",
+            showButton
+        );
+        domManager.addEventListener(
+            `.cards[data-card-id="${card_id}"]`,
+            "mouseleave",
+            hideButton
+        );
+        domManager.addEventListener(
+            `.cards[data-card-id="${card_id}"]`,
+            "dblclick",
+            changeNameOfCard
+        );
     },
     dragItem: null,
     loadCards: async function (boardId) {
@@ -30,21 +50,7 @@ export let cardsManager = {
             const cardBuilder = htmlFactory(htmlTemplates.card);
             const content = cardBuilder(card);
             domManager.addChild(`#content-columns-container[data-column-id="${card.status_id}"][data-board-id="${card.board_id}"]`, content);
-            domManager.addEventListener(
-                `#deleteCardButton[data-card-id="${card.id}"]`,
-                "click",
-                deleteCardButtonHandler
-            );
-            domManager.addEventListener(
-                `.cards[data-card-id="${card.id}"]`,
-                "mouseover",
-                showButton
-            );
-            domManager.addEventListener(
-                `.cards[data-card-id="${card.id}"]`,
-                "mouseleave",
-                hideButton
-            );
+
             this.initEvents(card.id)
         }
     },
@@ -69,7 +75,7 @@ function deleteCardButtonHandler(clickEvent) {
     for (let card of cardsToDelete) {
         if (cardId === card.getAttribute('data-card-id')) {
             card.remove();
-            dataHandler.deleteCard(cardId);
+            dataHandler.deleteCard(cardId).then(r => console.log(r));
         }
     }
 }
@@ -84,6 +90,13 @@ function handleDragStart(e) {
 function handleDragEnd(e) {
     e.target.classList.remove("dragged")
     cardsManager.dragItem = null
+}
+
+function changeNameOfCard(e){
+    let tempInnerHTML = e.target;
+    let card_id = tempInnerHTML.getAttribute("data-card-id")
+    let value = e.target.innerText
+    e.target.innerHTML = `<div><form action="/api/board/cards/name/${card_id}" method="post" ><input class="trans" name="title" value="${value}"></form></div>`
 }
 
 function deferredOriginChanges(origin, dragFeedbackClassName) {
