@@ -1,9 +1,11 @@
-from flask import Flask, render_template, url_for, session, redirect, request
-from dotenv import load_dotenv
-from util import json_response
 import mimetypes
+
+from dotenv import load_dotenv
+from flask import Flask, render_template, url_for, session, redirect, request
+
 import queires
 import util
+from util import json_response
 
 mimetypes.add_type('application/javascript', '.js')
 app = Flask(__name__)
@@ -38,10 +40,17 @@ def get_cards_for_board(board_id: int):
     return queires.get_cards_for_board(board_id)
 
 
-@app.route("/api/boards/<int:board_id>/cards/<int:card_id>")
+@app.route("/api/boards/<int:board_id>", methods=["DELETE"])
 @json_response
-def delete_card_from_board(board_id: int, card_id: int):
-    return
+def delete_board(board_id: int):
+    queires.delete_cards_by_board(board_id)
+    queires.delete_board(board_id)
+
+
+@app.route("/api/boards/cards/<int:card_id>", methods=["DELETE"])
+@json_response
+def delete_card_from_board(card_id: int):
+    queires.delete_card(card_id)
 
 
 @app.route("/api/boards/", methods=["POST"])
@@ -106,6 +115,11 @@ def login():
         else:
             return render_template('login.html', wrong_data=True)
     return render_template('login.html')
+
+
+@app.route('/api/change-status/<id_card>/<status_id>')
+def change_status(id_card, status_id):
+    queires.change_card_status(id_card, status_id)
 
 
 @app.route("/logout")

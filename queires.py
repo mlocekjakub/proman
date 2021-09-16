@@ -1,13 +1,8 @@
-import data_manager
 import connection
+import data_manager
 
 
 def get_card_status(status_id):
-    """
-    Find the first status matching the given id
-    :param status_id:
-    :return: str
-    """
     status = data_manager.execute_select(
         """
         SELECT * FROM statuses s
@@ -64,10 +59,6 @@ def add_new_card(cursor, title, board_id, card_order):
 
 
 def get_boards():
-    """
-    Gather all boards
-    :return:
-    """
     return data_manager.execute_select(
         """
         SELECT * FROM boards
@@ -76,9 +67,38 @@ def get_boards():
     )
 
 
+@connection.connection_handler
+def delete_board(cursor, board_id):
+    query = """
+                DELETE FROM boards
+                WHERE id = %(b_i)s;
+            """
+    arguments = {"b_i": board_id}
+    cursor.execute(query, arguments)
+
+
+@connection.connection_handler
+def delete_cards_by_board(cursor, board_id):
+    query = """
+                DELETE FROM cards
+                WHERE board_id = %(b_i)s;
+            """
+    arguments = {"b_i": board_id}
+    cursor.execute(query, arguments)
+
+
+@connection.connection_handler
+def delete_card(cursor, card_id):
+    query = """
+                DELETE FROM cards
+                WHERE id = %(i)s;
+            """
+    arguments = {"i": card_id}
+    cursor.execute(query, arguments)
+
+
 def get_cards_for_board(board_id):
     # remove this code once you implement the database
-
     matching_cards = data_manager.execute_select(
         """
         SELECT * FROM cards
@@ -86,48 +106,61 @@ def get_cards_for_board(board_id):
         ;
         """
         , {"board_id": board_id})
-
     return matching_cards
 
 
 @connection.connection_handler
 def check_if_user_in_database(cursor, email):
-    query = f""" SELECT * 
+    query = """ SELECT * 
                 FROM users 
-                WHERE username = '{email}'
-
+                WHERE username = %(email)s
             """
-    cursor.execute(query)
+    arguments = {"email": email}
+    cursor.execute(query, arguments)
+    result = cursor.fetchone()
+    return result
+
+
+@connection.connection_handler
+def change_card_status(cursor, card_id, status_id):
+    query = """ 
+        UPDATE cards SET status_id = %(status_id)s 
+        WHERE id = %(card_id)s
+            """
+    arguments = {"card_id": card_id, "status_id": status_id}
+    cursor.execute(query, arguments)
     result = cursor.fetchone()
     return result
 
 
 @connection.connection_handler
 def find_user_id_by_email(cursor, email):
-    query = f"""SELECT id
+    query = """SELECT id
                 FROM users
-                WHERE username = '{email}'
+                WHERE username = %(email)s
             """
-    cursor.execute(query)
+    arguments = {"email": email}
+    cursor.execute(query, arguments)
     return cursor.fetchone()
 
 
 @connection.connection_handler
 def save_user(cursor, email, password):
-    query = f"""INSERT INTO users(username,password)
-                VALUES  ('{email}', '{password}')  
-
+    query = """INSERT INTO users(username,password)
+                VALUES  (%(email)s, %(password)s)  
             """
-    return cursor.execute(query)
+    arguments = {"email": email, "password": password}
+    return cursor.execute(query, arguments)
 
 
 @connection.connection_handler
 def get_password_by_email(cursor, email):
-    query = f"""SELECT password
+    query = """SELECT password
                 FROM users
-                WHERE username = '{email}' 
+                WHERE username = %(email)s
             """
-    cursor.execute(query)
+    arguments = {"email": email}
+    cursor.execute(query, arguments)
     result = cursor.fetchone()
     return result
 

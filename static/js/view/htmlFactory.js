@@ -23,6 +23,8 @@ function boardBuilder(board) {
   <div class="row bg-light" id="header-Row" data-board-id="${board.id}">
       <div class="col h3 margin_header" id="board-title">${board.title}
     </div>
+    <div class="col-md-auto margin_header"><button type="button" class="btn btn-outline-dark btn-sm" id="deleteBoardButton" data-board-id="${board.id}">Delete Board</button>
+    </div>
     <div class="col-md-auto margin_header"><button type="button" data-board-id="${board.id}" class="btn btn-outline-dark btn-sm" id="add-card" hidden>+ Add Card</button>
     </div>
       <div class="col col-lg-2 margin_header"><button type="button" class="btn btn-outline-dark btn-sm" id="showContent" data-board-id="${board.id}">v Show Cards</button>
@@ -38,6 +40,7 @@ function boardBuilder(board) {
 function cardBuilder(card) {
     return `<div draggable="true" data-card-id="${card.id}" class="cards border border-info rounded">
       ${card.title}
+      <div><button type='button' id="deleteCardButton" class="btn btn-outline-dark btn-sm" data-card-id="${card.id}">X</button></div>
     </div>`;
 }
 

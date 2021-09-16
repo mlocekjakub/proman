@@ -30,24 +30,29 @@ export let boardsManager = {
       domManager.addEventListener("#form-card",
           "submit",
           dataHandler.createNewCard)
+      domManager.addEventListener(
+          `#deleteBoardButton[data-board-id="${board.id}"]`,
+          "click",
+          deleteBoardButtonHandler
+      );
       // do kolumn pozniej
       domManager.addEventListener(
-        "#content-row-container",
+        `#content-row-container[data-board-id="${board.id}"]`,
         "drop",
         handleDrop
       );
       domManager.addEventListener(
-        `#content-row-container`,
+        `#content-row-container[data-board-id="${board.id}"]`,
         "dragover",
         handleDragOver
       );
       domManager.addEventListener(
-        `#content-row-container`,
+        `#content-row-container[data-board-id="${board.id}"]`,
         "dragenter",
         handleDragEnter
       );
       domManager.addEventListener(
-        `#content-row-container`,
+        `#content-row-container[data-board-id="${board.id}"]`,
         "dragleave",
         handleDragLeave
       );
@@ -75,6 +80,18 @@ function showHideButtonHandler(clickEvent) {
   }
 }
 
+function deleteBoardButtonHandler (clickEvent) {
+  const boardId = clickEvent.target.dataset.boardId;
+  const rowsToDelete = document.getElementsByClassName('row' && 'bg-light')
+  for (let row of rowsToDelete) {
+    let rowId = row.getAttribute('data-board-id');
+    if (rowId === boardId) {
+      row.parentElement.remove();
+      dataHandler.deleteBoard(boardId);
+    }
+  }
+}
+
 let i = 0
 function handleDragOver(e) {
   e.preventDefault();
@@ -96,14 +113,20 @@ function handleDragLeave(e) {
 }
 
 function handleDrop(e) {
-    console.log(e)
   e.preventDefault()
   let div = document.getElementById("drop-over");
+  div.parentNode.insertBefore(cardsManager.dragItem,div)
+
+  console.log(div.parentNode["data-column-id"])
   div.remove()
-  e.target.insertAdjacentHTML("afterend",cardsManager.dragItem)
-  console.log(cardsManager.dragItem)
-  cardsManager.dragItem= null
-  console.log("drop "+e);
+  // changeStatus()
+  cardsManager.dragItem = null
+}
+
+function changeStatus(card_id, status_id){
+  return fetch('/api/change-status/'+card_id+"/"+status_id, {
+        method: 'PUT'
+    }).then(response => "")
 }
 
 
