@@ -19,13 +19,13 @@ export function htmlFactory(template) {
 }
 
 function boardBuilder(board) {
-    return `<br><div class="container">
+    return ` <br><div class="container">
   <div class="row bg-light" id="header-Row" data-board-id="${board.id}">
       <div class="col h3 margin_header" id="board-title">${board.title}
     </div>
     <div class="col-md-auto margin_header"><button type="button" class="btn btn-outline-dark btn-sm" id="deleteBoardButton" data-board-id="${board.id}">Delete Board</button>
     </div>
-    <div class="col-md-auto margin_header"><button type="button" class="btn btn-outline-dark btn-sm">+ Add Card</button>
+    <div class="col-md-auto margin_header"><button type="button" data-board-id="${board.id}" class="btn btn-outline-dark btn-sm" id="add-card" hidden>+ Add Card</button>
     </div>
       <div class="col col-lg-2 margin_header"><button type="button" class="btn btn-outline-dark btn-sm" id="showContent" data-board-id="${board.id}">v Show Cards</button>
     </div>
@@ -49,6 +49,6 @@ function columnBuilder(column,boardId) {
     document.querySelector(`#content-row-container[data-board-id='${boardId}']`).hidden = false
     return [`<div class="col border-right border-secondary" style="background-color: #6F8FAF" data-column-id="${column.id}" data-board-id="${boardId}">
      <div id="status-title">${column.title}</div>
-    </div>`, `<div class = "col content-columns-container" data-column-id="${column.id}" id="content-columns-container" data-board-id="${boardId}"><div class="empty">&nbsp;</div></div>`];
+    </div>`, `<div class = "col" data-column-id="${column.id}" id="content-columns-container" data-board-id="${boardId}"></div>`];
     }
 

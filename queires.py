@@ -15,16 +15,47 @@ def get_card_status(status_id):
 
 def get_statuses_for_board(board_id):
     status = data_manager.execute_select(
-    """
-    SELECT statuses.id, statuses.title FROM statuses
-    JOIN cards on statuses.id = cards.status_id
-    JOIN boards on cards.board_id = %(board_id)s
-    group by statuses.id
-    order by statuses.id ASC
-    ;
-    """
+        """
+        SELECT statuses.id, statuses.title FROM statuses
+        JOIN cards on statuses.id = cards.status_id
+        JOIN boards on cards.board_id = %(board_id)s
+        group by statuses.id
+        order by statuses.id ASC
+        ;
+        """
         , {"board_id": board_id})
     return status
+
+
+@connection.connection_handler
+def add_new_board(cursor, board_title):
+    status = """
+        INSERT INTO boards(title)
+        VALUES (%(title)s);
+        """
+    arguments = {"title": board_title}
+    cursor.execute(status, arguments)
+
+
+def find_last_card_in_board_by_order(board_id):
+    status = data_manager.execute_select(
+        """
+        SELECT MAX(cards.card_order)+1 as order
+        FROM cards 
+        WHERE cards.board_id = (%(board_id)s);
+        """
+        , {"board_id": board_id})
+    return status
+
+
+@connection.connection_handler
+def add_new_card(cursor, title, board_id, card_order):
+    status = """
+        INSERT INTO cards(board_id,title,card_order)
+        VALUES (%(board_id)s, %(title)s, %(card_order)s);
+    """
+    arguments = {"board_id": board_id, "title": title, "card_order": card_order}
+    cursor.execute(status, arguments)
 
 
 def get_boards():
@@ -132,3 +163,7 @@ def get_password_by_email(cursor, email):
     cursor.execute(query, arguments)
     result = cursor.fetchone()
     return result
+
+
+
+
