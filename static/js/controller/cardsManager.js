@@ -46,7 +46,7 @@ function deleteCardButtonHandler(clickEvent) {
   for (let card of cardsToDelete) {
     if (cardId === card.getAttribute('data-card-id')) {
       card.remove();
-      dataHandler.deleteCard(cardId);
+      dataHandler.deleteCard(cardId).then(r => console.log(r));
     }
   }
 }
@@ -61,6 +61,10 @@ function handleDragStart(e) {
 function handleDragEnd(e) {
   e.target.classList.remove("dragged")
   cardsManager.dragItem= null
+}
+
+function changeNameOfCard(e){
+  e.target= innerHTML
 }
 
 function deferredOriginChanges(origin, dragFeedbackClassName) {

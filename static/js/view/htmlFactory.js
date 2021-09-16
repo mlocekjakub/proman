@@ -38,7 +38,7 @@ function boardBuilder(board) {
 }
 
 function cardBuilder(card) {
-    return `<div draggable="true" data-card-id="${card.id}" class="cards border border-info rounded">
+    return `<div draggable="true" data-card-id="${card.id}" data-cardorder-id="${card.card_order}" class="cards border border-info rounded">
       ${card.title}
       <div><button type='button' id="deleteCardButton" class="btn btn-outline-dark btn-sm" data-card-id="${card.id}">X</button></div>
     </div>`;
