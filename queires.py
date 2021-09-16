@@ -13,18 +13,14 @@ def get_card_status(status_id):
     return status
 
 
-def get_statuses_for_board(board_id):
-    status = data_manager.execute_select(
+def get_statuses_for_board():
+    statuses = data_manager.execute_select(
         """
-        SELECT statuses.id, statuses.title FROM statuses
-        JOIN cards on statuses.id = cards.status_id
-        JOIN boards on cards.board_id = %(board_id)s
-        group by statuses.id
-        order by statuses.id ASC
-        ;
-        """
-        , {"board_id": board_id})
-    return status
+        SELECT id, title 
+        FROM statuses
+        order by statuses.id ASC;
+        """)
+    return statuses
 
 
 @connection.connection_handler

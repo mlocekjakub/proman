@@ -38,7 +38,9 @@ export let cardsManager = {
     dragItem: null,
     loadCards: async function (boardId) {
         const cards = await dataHandler.getCardsByBoardId(boardId);
-        const columns = await dataHandler.getStatusesByBoardId(boardId)
+        const columns = await dataHandler.getStatusesByBoardId()
+        console.log(boardId);
+        console.log(columns);
         for (let column of columns) {
             const columnBuilder = htmlFactory(htmlTemplates.column)
             const content = columnBuilder(column, boardId)[0]
