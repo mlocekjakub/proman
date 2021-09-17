@@ -102,7 +102,7 @@ function handleDragOver(e) {
   e.preventDefault();
   if(i==0) {
     i++;
-    if (e.target.id !== "content-columns-container" && e.target.id !== "deleteCardButton") {
+    if (e.target.id !== "content-columns-container" && e.target.id !== "content-row-container" && e.target.id !== "deleteCardButton") {
       e.target.insertAdjacentHTML("afterend", `<div id="drop-over">&nbsp</div>`);
     }
   }
