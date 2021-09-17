@@ -49,6 +49,6 @@ function columnBuilder(column,boardId) {
     document.querySelector(`#content-row-container[data-board-id='${boardId}']`).hidden = false
     return [`<div class="col border-right border-dark" style="background-color: #566DBA" data-column-id="${column.id}" data-board-id="${boardId}">
      <div id="status-title">${column.title}</div>
-    </div>`, `<div class = "col" data-column-id="${column.id}" id="content-columns-container" data-board-id="${boardId}"><div class="empty">&nbsp</div></div>`];
+    </div>`, `<div class = "col rounded m-2 p-2 d-flex flex-column" data-column-id="${column.id}" id="content-columns-container" data-board-id="${boardId}"><div class="empty">&nbsp</div></div>`];
     }
 

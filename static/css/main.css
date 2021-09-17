@@ -56,7 +56,7 @@ body{
 
 #drop-over {
     border-style: dashed;
-    background: #ddd;
+    background: rgba(111, 143, 175, 0.24);
     color : #ddd;
     border-color: black;
 }
@@ -78,4 +78,8 @@ body{
 .not_valid {
     background: #FFCCCC;
     border-color: red;
+}
+#content-columns-container {
+    background-color: rgba(111, 143, 175, 0.24);
+    min-height: 18vh;
 }
