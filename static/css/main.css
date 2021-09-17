@@ -23,8 +23,8 @@ body{
 #content-row-container {
     height:50vh;
     background: #E8E9EB;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
 }
 #header-Row {
     background: whitesmoke;
@@ -33,8 +33,8 @@ body{
 .margin_header {
     margin-top: 2vh;
     margin-bottom: 2vh;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
 }
 
 #status-title {
@@ -74,4 +74,8 @@ body{
 }
 #create-board-button {
     cursor: pointer;
+}
+.not_valid {
+    background: #FFCCCC;
+    border-color: red;
 }

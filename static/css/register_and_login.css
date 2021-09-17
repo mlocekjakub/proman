@@ -12,8 +12,8 @@
     left: 50%;
     transform: translate(-50%,0);
     margin-top: 15px;
-    background-color: white;
-    border-color: black;
+    background-color: whitesmoke;
+    border: 1px solid #566DBA;
     font-family: Lato, Helvetica, sans-serif;
     font-weight: bold;
 }

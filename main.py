@@ -75,12 +75,15 @@ def create_new_board():
     print(board_title)
     queires.add_new_board(board_title)
 
+
 @app.route("/api/boards/cards", methods=["POST"])
 @json_response
 def create_new_card():
     card_title = request.get_json()["cardTitle"]
     board_id = request.get_json()["boardId"]
     card_order = queires.find_last_card_in_board_by_order(board_id)[0]['order']
+    if not card_order:
+        card_order = 1
     queires.add_new_card(card_title, board_id, card_order)
 
 

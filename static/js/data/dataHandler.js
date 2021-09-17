@@ -31,20 +31,20 @@ export let dataHandler = {
     },
     createNewBoard: async function (e) {
       e.preventDefault()
-      let title = document.getElementById("board-title").value
+      let title = document.getElementById("board-title")
       let boardHeader = document.getElementById("exampleModalLabel")
       const form = e.currentTarget
       const url = form.action;
-      if (!title) {
-          setTimeout(function(){ title.style.borderColor = "red"; }, 1000);
+      if (!title.value) {
+          title.classList.add("not_valid")
           return;
       }
         try {
-            await postData(url, title)
+            await postData(url, title.value)
                 .then (() => {
                     document.getElementById("form-board").hidden = true
-                    boardHeader.innerText = "successfully added board"
-                    boardHeader.style.color = "#4BB543"
+                    boardHeader.innerHTML = "successfully added board <i class=\"bi bi-check2-all\"></i>"
+                    boardHeader.style.color = "#3cb371"
                     setTimeout(function(){dataHandler.reloadBoards(); }, 1000);
                 });
         }catch (error){
@@ -60,22 +60,22 @@ export let dataHandler = {
     },
   createNewCard: async function (e) {
       e.preventDefault()
-      let title = document.getElementById("card-title").value
+      let title = document.getElementById("card-title")
       let cardHeader = document.getElementById("exampleModalLabel")
       const form = e.currentTarget
       let boardId = form.getAttribute("data-board-id")
       const url = form.action;
-      let formData = {"cardTitle": title, "boardId": boardId}
-      if (!title) {
-          setTimeout(function(){ title.style.borderColor = "red"; }, 1000);
+      let formData = {"cardTitle": title.value, "boardId": boardId}
+      if (!title.value) {
+          title.classList.add("not_valid")
           return;
       }
         try {
             await postData(url, formData)
                 .then (() => {
                     document.getElementById("form-card").hidden = true
-                    cardHeader.innerText = "successfully added card"
-                    cardHeader.style.color = "#4BB543"
+                    cardHeader.innerHTML = "successfully added card <i class=\"bi bi-check2-all\"></i>"
+                    cardHeader.style.color = "#3cb371"
                     setTimeout(function(){ dataHandler.reloadBoards();
                         }, 1000);
 

@@ -16,6 +16,12 @@ export let boardsManager = {
     domManager.addEventListener("#form-card",
           "submit",
           dataHandler.createNewCard)
+    domManager.addEventListener("#board-title",
+        "click",
+        removeNotValidStyleBoard)
+    domManager.addEventListener("#card-title",
+        "click",
+        removeNotValidStyleCard)
     const boards = await dataHandler.getBoards();
     for (let board of boards) {
       const boardBuilder = htmlFactory(htmlTemplates.board);
@@ -142,10 +148,13 @@ function openNewBoardModal() {
     let newCardForm = document.getElementById("form-card")
     let newBoardForm = document.getElementById("form-board")
     let modalTitle = document.getElementById("exampleModalLabel")
+    let inputModal = document.getElementById("board-title")
     newBoardForm.hidden = false
     newCardForm.hidden = true
     modalTitle.style.color = "black"
-    modalTitle.innerText = "Create new board"
+    modalTitle.innerHTML = "Create new board"
+    inputModal.classList.remove("not_valid")
+    inputModal.value = ""
     $(newBoardModal).modal();
 }
 
@@ -154,12 +163,23 @@ function openNewCardModal(e) {
   let newCardForm = document.getElementById("form-card")
   let newBoardForm = document.getElementById("form-board")
   let modalTitle = document.getElementById("exampleModalLabel")
+  let inputModal = document.getElementById("card-title")
   let boardId = e.target.dataset.boardId;
   newCardForm.setAttribute("data-board-id", boardId)
   newCardForm.hidden = false
   newBoardForm.hidden = true
   modalTitle.style.color = "black"
-  modalTitle.innerText = "Create new card"
+  modalTitle.innerHTML = "Create new card"
+  inputModal.classList.remove("not_valid")
+  inputModal.value = ""
   $(newCardModal).modal();
+}
+function removeNotValidStyleBoard() {
+    let fieldToRemoveStyle = document.getElementById("board-title")
+    fieldToRemoveStyle.classList.remove("not_valid")
+}
+function removeNotValidStyleCard() {
+    let fieldToRemoveStyle = document.getElementById("card-title")
+    fieldToRemoveStyle.classList.remove("not_valid")
 }
 

@@ -58,16 +58,16 @@ export let cardsManager = {
     },
 };
 function showButton(event) {
-    let buttons = event.target.getElementsByTagName('button')
+    let buttons = event.target.getElementsByTagName('i')
     for (let button of buttons) {
-        button.style.display = 'inline';
+        button.hidden = false;
     }
 }
 
 function hideButton(event) {
-    let buttons = event.target.getElementsByTagName('button')
+    let buttons = event.target.getElementsByTagName('i')
     for (let button of buttons) {
-        button.style.display = 'none';
+        button.hidden = true;
     }
 }
 
