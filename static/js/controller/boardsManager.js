@@ -5,6 +5,10 @@ import { cardsManager } from "./cardsManager.js";
 
 export let boardsManager = {
   loadBoards: async function () {
+    domManager.addEventListener("#form-card",
+          "submit",
+          dataHandler.createNewCard
+      );
     const boards = await dataHandler.getBoards();
     for (let board of boards) {
       const boardBuilder = htmlFactory(htmlTemplates.board);
@@ -27,9 +31,7 @@ export let boardsManager = {
           "submit",
           dataHandler.createNewBoard
       );
-      domManager.addEventListener("#form-card",
-          "submit",
-          dataHandler.createNewCard)
+
       domManager.addEventListener(
           `#deleteBoardButton[data-board-id="${board.id}"]`,
           "click",
