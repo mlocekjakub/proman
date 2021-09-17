@@ -14,8 +14,8 @@ export let boardsManager = {
           dataHandler.createNewBoard
       );
     domManager.addEventListener("#form-card",
-          "submit",
-          dataHandler.createNewCard)
+        "submit",
+        dataHandler.createNewCard)
     domManager.addEventListener("#board-title",
         "click",
         removeNotValidStyleBoard)
@@ -36,9 +36,6 @@ export let boardsManager = {
           "click",
           openNewCardModal
       );
-      domManager.addEventListener("#form-card",
-          "submit",
-          dataHandler.createNewCard)
       domManager.addEventListener(
           `#deleteBoardButton[data-board-id="${board.id}"]`,
           "click",
@@ -76,16 +73,15 @@ function showHideButtonHandler(clickEvent) {
   const addCardButton = document.querySelector(`#add-card[data-board-id="${boardId}"]`)
   console.log(element.innerHTML)
   if (element.innerHTML === "<i class=\"bi bi-chevron-double-down\"></i> Show") {
-      cardsManager.loadCards(boardId);
-      addCardButton.parentNode.hidden = false
-      element.innerHTML = "<i class=\"bi bi-chevron-double-up\"></i> Hide"
-  }
-  else {
-      addCardButton.parentNode.hidden = true
-      contentToHide.hidden = true
-      contentToHide.innerHTML = ""
-      statusesToHide.innerHTML = ""
-      element.innerHTML = "<i class=\"bi bi-chevron-double-down\"></i> Show"
+    cardsManager.loadCards(boardId);
+    addCardButton.parentNode.hidden = false
+    element.innerHTML = "<i class=\"bi bi-chevron-double-up\"></i> Hide"
+  } else {
+    addCardButton.parentNode.hidden = true
+    contentToHide.hidden = true
+    contentToHide.innerHTML = ""
+    statusesToHide.innerHTML = ""
+    element.innerHTML = "<i class=\"bi bi-chevron-double-down\"></i> Show"
   }
 }
 
@@ -106,7 +102,9 @@ function handleDragOver(e) {
   e.preventDefault();
   if(i==0) {
     i++;
-    e.target.insertAdjacentHTML("afterend", `<div id="drop-over">&nbsp</div>`);
+    if (e.target.id !== "content-columns-container" && e.target.id !== "deleteCardButton") {
+      e.target.insertAdjacentHTML("afterend", `<div id="drop-over">&nbsp</div>`);
+    }
   }
 }
 
