@@ -52,17 +52,17 @@ import {domManager} from "../view/domManager.js";
                 const content = cardBuilder(card);
                 domManager.addChild(`#content-columns-container[data-column-id="${card.status_id}"][data-board-id="${card.board_id}"]`, content);
 
-                this.initEvents(card.id)
-            }
-        },
-    };
-
-    function showButton(event) {
-        let buttons = event.target.getElementsByTagName('i')
-        for (let button of buttons) {
-            button.hidden = false;
+            this.initEvents(card.id)
         }
+    },
+};
+
+function showButton(event) {
+    let buttons = event.target.getElementsByTagName('i')
+    for (let button of buttons) {
+        button.hidden = false;
     }
+}
 
     function hideButton(event) {
         let buttons = event.target.getElementsByTagName('i')
@@ -94,12 +94,24 @@ import {domManager} from "../view/domManager.js";
         cardsManager.dragItem = null
     }
 
-    function changeNameOfCard(e) {
-        let tempInnerHTML = e.target;
-        let card_id = tempInnerHTML.getAttribute("data-card-id")
-        let value = e.target.innerText
-        e.target.innerHTML = `<div><form action="/" method="post" ><input class="trans" name="title" value="${value}"></form></div>`
-    }
+function changeNameOfCard(e) {
+    let tempInnerHTML = e.target;
+    let card_id = tempInnerHTML.getAttribute("data-card-id")
+    let value = e.target.innerText
+    e.target.innerHTML = `<div><input id="change-title" class="trans" name="title" value="${value}"></div>`
+    document.getElementById('change-title').addEventListener("keypress", function (eve) {
+        console.log(eve.key)
+        if (eve.key === 'Enter') {
+            let title = eve.target.value
+            dataHandler.changeName(card_id, {'title': title}).then(r => console.log())
+            e.target.innerHTML = `${title} <i id="deleteCardButton" data-card-id="${card_id}" class="bi bi-trash2" hidden></i>`
+        }
+
+    })
+    document.getElementById('change-title').addEventListener("blur", function (eve) {
+        e.target.innerHTML = `${value} <i id="deleteCardButton" data-card-id="${card_id}" class="bi bi-trash2" hidden></i>`
+    })
+}
 
     function deferredOriginChanges(origin, dragFeedbackClassName) {
         setTimeout(() => {

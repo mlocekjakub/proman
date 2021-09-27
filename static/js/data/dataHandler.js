@@ -88,6 +88,9 @@ export let dataHandler = {
     },
     changeStatus: async function (cardId, data) {
         const response = await apiPut(`/api/boards/cards/${cardId}`, data)
+    },
+    changeName: async function (cardId, data) {
+        const response = await apiPut(`/api/boards/cards/name/${cardId}`, data)
     }
 };
 
