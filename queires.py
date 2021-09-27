@@ -140,6 +140,17 @@ def change_card_name(cursor, card_id, title):
 
 
 @connection.connection_handler
+def change_board_name(cursor, board_id, title):
+    query = """ 
+        UPDATE boards 
+        SET title = %(title)s
+        WHERE id = %(board_id)s
+        """
+    arguments = {"board_id": board_id, "title": title}
+    cursor.execute(query, arguments)
+
+
+@connection.connection_handler
 def change_card_order(cursor, card_order, board_id):
     query = """
     UPDATE cards

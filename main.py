@@ -67,6 +67,13 @@ def change_cards_name(card_id: int):
     queires.change_card_name(card_id, title)
 
 
+@app.route("/api/boards/name/<int:board_id>", methods=["PUT"])
+@json_response
+def change_boards_name(board_id: int):
+    title = request.get_json()["title"]
+    queires.change_board_name(board_id, title)
+
+
 @app.route("/api/boards/", methods=["POST"])
 @json_response
 def create_new_board():

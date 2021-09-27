@@ -61,6 +61,11 @@ export let boardsManager = {
         "dragleave",
         handleDragLeave
       );
+      domManager.addEventListener(
+        `#board-title[data-board-id="${board.id}"]`,
+        "dblclick",
+        changeBoardOfCard
+      );
     }
   },
 };
@@ -96,11 +101,11 @@ function deleteBoardButtonHandler (clickEvent) {
   }
 }
 
-let i = 0
+let isDropOverDiv = false
 function handleDragOver(e) {
   e.preventDefault();
-  if(i==0) {
-    i++;
+  if(!isDropOverDiv) {
+    isDropOverDiv = true
     if (e.target.id !== "content-columns-container" && e.target.id !== "content-row-container" && e.target.id !== "deleteCardButton") {
       e.target.insertAdjacentHTML("afterend", `<div id="drop-over">&nbsp</div>`);
     }
@@ -111,8 +116,8 @@ function handleDragEnter(e) {
 }
 
 function handleDragLeave(e) {
-  if(i==1){
-    i--;
+  if(isDropOverDiv){
+    isDropOverDiv = false
     let div = document.getElementById("drop-over");
     div.remove()
   }
@@ -180,3 +185,25 @@ function removeNotValidStyleCard() {
     fieldToRemoveStyle.classList.remove("not_valid")
 }
 
+function changeBoardOfCard(e) {
+    let card_id = e.target.getAttribute("data-board-id")
+    let previousInput = e.target.innerText
+    let isSave = false
+    e.target.innerHTML = `<div><input id="change-title" name="title" value="${previousInput}"></div>`
+
+    document.getElementById('change-title').addEventListener("keypress", function (eve) {
+        if (eve.key === 'Enter') {
+            let title = eve.target.value
+            dataHandler.changeBoardName(card_id, {'title': title})
+            isSave = true
+            document.activeElement.blur()
+        }
+    })
+    document.getElementById('change-title').addEventListener("focusout", function (eve) {
+        let title = eve.target.value
+        if(!isSave) {
+            e.target.innerHTML = `${previousInput}`
+        }else{
+            e.target.innerHTML = `${title}`
+        }})
+}
