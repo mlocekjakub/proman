@@ -15,10 +15,10 @@ export let cardsManager = {
             handleDragEnd
         );
         domManager.addEventListener(
-                `#deleteCardButton[data-card-id="${card_id}"]`,
-                "click",
-                deleteCardButtonHandler
-            );
+            `#deleteCardButton[data-card-id="${card_id}"]`,
+            "click",
+            deleteCardButtonHandler
+        );
         domManager.addEventListener(
             `.cards[data-card-id="${card_id}"]`,
             "mouseover",
@@ -57,6 +57,7 @@ export let cardsManager = {
         }
     },
 };
+
 function showButton(event) {
     let buttons = event.target.getElementsByTagName('i')
     for (let button of buttons) {
@@ -94,11 +95,22 @@ function handleDragEnd(e) {
     cardsManager.dragItem = null
 }
 
-function changeNameOfCard(e){
+function changeNameOfCard(e) {
     let tempInnerHTML = e.target;
     let card_id = tempInnerHTML.getAttribute("data-card-id")
     let value = e.target.innerText
-    e.target.innerHTML = `<div><form action="/" method="post" ><input class="trans" name="title" value="${value}"></form></div>`
+    e.target.innerHTML = `<div><input id="change-title" class="trans" name="title" value="${value}"></div>`
+    document.getElementById('change-title').addEventListener("keypress", function (eve) {
+        if (eve.key == 'Enter') {
+            let title = eve.target.value
+            dataHandler.changeName(card_id, {'title': title}).then(r => console.log())
+            e.target.innerHTML = `${title} <i id="deleteCardButton" data-card-id="${card_id}" class="bi bi-trash2" hidden></i>`
+        }
+
+    })
+    document.getElementById('change-title').addEventListener("blur", function (eve) {
+        e.target.innerHTML = `${value} <i id="deleteCardButton" data-card-id="${card_id}" class="bi bi-trash2" hidden></i>`
+    })
 }
 
 function deferredOriginChanges(origin, dragFeedbackClassName) {

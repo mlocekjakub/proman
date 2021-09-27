@@ -58,3 +58,20 @@ def execute_select(statement, variables=None, fetchall=True):
             result_set = cursor.fetchall() if fetchall else cursor.fetchone()
     return result_set
 
+
+def execute_dml_statement(statement, variables=None):
+    """
+    Execute data manipulation query statement (optionally parameterized)
+
+    :statment: SQL statement
+
+    :variables:  optional parameter dict"""
+    result = None
+    with establish_connection() as conn:
+        with conn.cursor() as cursor:
+            cursor.execute(statement, variables)
+            try:
+                result = cursor.fetchone()
+            except psycopg2.ProgrammingError as pe:
+                pass
+    return result

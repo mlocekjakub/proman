@@ -71,7 +71,6 @@ function showHideButtonHandler(clickEvent) {
   const contentToHide = document.querySelector(`#content-row-container[data-board-id="${boardId}"]`)
   const statusesToHide = document.querySelector(`#statuses-row-container[data-board-id="${boardId}"]`)
   const addCardButton = document.querySelector(`#add-card[data-board-id="${boardId}"]`)
-  console.log(element.innerHTML)
   if (element.innerHTML === "<i class=\"bi bi-chevron-double-down\"></i> Show") {
     cardsManager.loadCards(boardId);
     addCardButton.parentNode.hidden = false
@@ -102,7 +101,7 @@ function handleDragOver(e) {
   e.preventDefault();
   if(i==0) {
     i++;
-    if (e.target.id !== "content-columns-container" && e.target.id !== "deleteCardButton") {
+    if (e.target.id !== "content-columns-container" && e.target.id !== "content-row-container" && e.target.id !== "deleteCardButton") {
       e.target.insertAdjacentHTML("afterend", `<div id="drop-over">&nbsp</div>`);
     }
   }

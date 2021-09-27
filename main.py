@@ -60,12 +60,11 @@ def delete_card_from_board(card_id: int):
         queires.change_card_status(card_id, status_id, card_order)
 
 
-@app.route("/api/board/cards/name/<int:card_id>", methods=["POST"])
+@app.route("/api/boards/cards/name/<int:card_id>", methods=["PUT"])
 @json_response
 def change_cards_name(card_id: int):
-    if request.method == "POST":
-        title = request.form()["title"]
-        queires.change_card_name(card_id, title)
+    title = request.get_json()["title"]
+    queires.change_card_name(card_id, title)
 
 
 @app.route("/api/boards/", methods=["POST"])

@@ -18,7 +18,7 @@ export let dataHandler = {
     },
     getCardsByBoardId: async function (boardId) {
         const response = await apiGet(`/api/boards/${boardId}/cards/`);
-        return response;
+        return response;``
     },
     getCard: async function (cardId) {
         // the card is retrieved and then the callback function is called with the card
@@ -86,6 +86,9 @@ export let dataHandler = {
   },
     changeStatus: async function (cardId, data) {
         const response = await apiPut(`/api/boards/cards/${cardId}`, data)
+    },
+    changeName: async function (cardId, data) {
+        const response = await apiPut(`/api/boards/cards/name/${cardId}`, data)
     }
 };
 async function apiGet(url) {
