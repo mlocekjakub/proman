@@ -21,7 +21,7 @@ export function htmlFactory(template) {
 function boardBuilder(board) {
     return ` <div class="container">
   <div class="row bg-light" id="header-Row" data-board-id="${board.id}" >
-      <div class="col h3 margin_header" id="board-title">${board.title}
+      <div class="col h3 margin_header" id="board-title" data-board-id="${board.id}">${board.title}
     </div>
     <div class="col-md-auto margin_header mr-0" hidden><button type="button" data-board-id="${board.id}" class="btn btn-outline-dark btn-sm" id="add-card">+ Add Card</button>
     </div>

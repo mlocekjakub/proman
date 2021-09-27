@@ -2,26 +2,30 @@ import { dataHandler } from "../data/dataHandler.js";
 import { htmlFactory, htmlTemplates } from "../view/htmlFactory.js";
 import { domManager } from "../view/domManager.js";
 import { cardsManager } from "./cardsManager.js";
+let i = 0
 
 export let boardsManager = {
   loadBoards: async function () {
     domManager.addEventListener(`#create-board-button`,
           "click",
           openNewBoardModal
-      );
+    );
     domManager.addEventListener("#form-board",
           "submit",
           dataHandler.createNewBoard
-      );
+    );
     domManager.addEventListener("#form-card",
         "submit",
-        dataHandler.createNewCard)
+        dataHandler.createNewCard
+    );
     domManager.addEventListener("#board-title",
         "click",
-        removeNotValidStyleBoard)
+        removeNotValidStyleBoard
+    );
     domManager.addEventListener("#card-title",
         "click",
-        removeNotValidStyleCard)
+        removeNotValidStyleCard
+    );
     const boards = await dataHandler.getBoards();
     for (let board of boards) {
       const boardBuilder = htmlFactory(htmlTemplates.board);
@@ -32,6 +36,11 @@ export let boardsManager = {
         "click",
         showHideButtonHandler
       );
+      domManager.addEventListener(
+          `#board-title[data-board-id="${board.id}"]`,
+          "click",
+          showHideButtonHandler
+    );
       domManager.addEventListener(`#add-card[data-board-id="${board.id}"]`,
           "click",
           openNewCardModal
@@ -71,7 +80,6 @@ function showHideButtonHandler(clickEvent) {
   const contentToHide = document.querySelector(`#content-row-container[data-board-id="${boardId}"]`)
   const statusesToHide = document.querySelector(`#statuses-row-container[data-board-id="${boardId}"]`)
   const addCardButton = document.querySelector(`#add-card[data-board-id="${boardId}"]`)
-  console.log(element.innerHTML)
   if (element.innerHTML === "<i class=\"bi bi-chevron-double-down\"></i> Show") {
     cardsManager.loadCards(boardId);
     addCardButton.parentNode.hidden = false
@@ -97,10 +105,9 @@ function deleteBoardButtonHandler (clickEvent) {
   }
 }
 
-let i = 0
 function handleDragOver(e) {
   e.preventDefault();
-  if(i==0) {
+  if(i===0) {
     i++;
     if (e.target.id !== "content-columns-container" && e.target.id !== "content-row-container" && e.target.id !== "deleteCardButton") {
       e.target.insertAdjacentHTML("afterend", `<div id="drop-over">&nbsp</div>`);
@@ -112,7 +119,7 @@ function handleDragEnter(e) {
 }
 
 function handleDragLeave(e) {
-  if(i==1){
+  if(i===1){
     i--;
     let div = document.getElementById("drop-over");
     div.remove()
@@ -132,7 +139,6 @@ function handleDrop(e) {
   else{
     card_order = parseInt(div.previousSibling.getAttribute("data-cardorder-id")) + 1;
   }
-
   let card_id = cardsManager.dragItem.getAttribute("data-card-id");
   let data = {"status_id": status_id, "card_order": card_order, "board_id":board_id}
   dataHandler.changeStatus(card_id, data).then(r =>{});
@@ -172,10 +178,12 @@ function openNewCardModal(e) {
   inputModal.value = ""
   $(newCardModal).modal();
 }
+
 function removeNotValidStyleBoard() {
     let fieldToRemoveStyle = document.getElementById("board-title")
     fieldToRemoveStyle.classList.remove("not_valid")
 }
+
 function removeNotValidStyleCard() {
     let fieldToRemoveStyle = document.getElementById("card-title")
     fieldToRemoveStyle.classList.remove("not_valid")
