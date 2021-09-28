@@ -23,8 +23,11 @@ export let dataHandler = {
     deleteBoard: async function (boardId) {
         const response = await apiDelete(`/api/boards/${boardId}`);
     },
-    deleteCard: async function (card_id) {
-        const response = await apiDelete(`/api/boards/cards/${card_id}`);
+    archiveCard: async function (cardId, data) {
+        const response = await apiPut(`/api/boards/cards/archive/${cardId}`, data);
+    },
+    deleteCard: async function (cardId) {
+        const response = await apiDelete(`/api/boards/cards/${cardId}`);
     },
     createNewBoard: async function (e) {
         e.preventDefault()
@@ -139,5 +142,4 @@ async function apiPut(url, data) {
         },
         body: JSON.stringify(data)
     });
-    return response.json();
 }

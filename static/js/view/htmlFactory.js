@@ -14,7 +14,9 @@ export function htmlFactory(template) {
             return columnBuilder
         default:
             console.error("Undefined template: " + template)
-            return () => { return "" }
+            return () => {
+                return ""
+            }
     }
 }
 
@@ -40,15 +42,17 @@ function boardBuilder(board) {
 
 function cardBuilder(card) {
     return `<div draggable="true" data-card-id="${card.id}" data-cardorder-id="${card.card_order}" class="cards border border-success rounded">
-      ${card.title} <i id="deleteCardButton" data-card-id="${card.id}" class="bi bi-trash2" hidden></i>
-    </div>`;
+                <i id="archiveCardButton" data-card-id="${card.id}" class="bi bi-archive" hidden></i>
+                ${card.title}
+                <i id="deleteCardButton" data-card-id="${card.id}" class="bi bi-trash2" hidden></i>
+            </div>`;
 }
 
-function columnBuilder(column,boardId) {
+function columnBuilder(column, boardId) {
     document.querySelector(`#statuses-row-container[data-board-id='${boardId}']`).hidden = false
     document.querySelector(`#content-row-container[data-board-id='${boardId}']`).hidden = false
     return [`<div class="col border-right border-dark" style="background-color: #566DBA" data-column-id="${column.id}" data-board-id="${boardId}">
      <div id="status-title">${column.title}</div>
     </div>`, `<div class = "col rounded m-2 p-2 d-flex flex-column" data-column-id="${column.id}" id="content-columns-container" data-board-id="${boardId}"><div class="empty">&nbsp</div></div>`];
-    }
+}
 

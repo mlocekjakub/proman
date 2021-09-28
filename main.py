@@ -46,6 +46,13 @@ def delete_board(board_id: int):
     queires.delete_board(board_id)
 
 
+@app.route("/api/boards/cards/archive/<int:card_id>", methods=["PUT"])
+@json_response
+def archive_card(card_id: int):
+    archived_status = request.get_json()["archived_status"]
+    queires.archive_card(card_id, archived_status)
+
+
 @app.route("/api/boards/cards/<int:card_id>", methods=["DELETE", "PUT"])
 @json_response
 def delete_card_from_board(card_id: int):

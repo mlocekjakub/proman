@@ -75,6 +75,15 @@ def delete_card(card_id):
         """, {"card_id": card_id})
 
 
+def archive_card(card_id, archived_status):
+    data_manager.execute_dml_statement(
+        """
+        UPDATE cards
+        SET archived = %(archived_status)s
+        WHERE id = %(card_id)s 
+        """, {"card_id": card_id, "archived_status": archived_status})
+
+
 def get_cards_for_board(board_id):
     return data_manager.execute_select(
         """
