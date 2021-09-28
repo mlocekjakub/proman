@@ -1,5 +1,5 @@
 import {boardsManager} from "../controller/boardsManager.js";
-import {domManager} from "../view/domManager";
+import {domManager} from "../view/domManager.js";
 
 export let dataHandler = {
     getBoards: async function () {
@@ -13,7 +13,6 @@ export let dataHandler = {
     },
     getStatus: async function (statusId) {
         // the status is retrieved and then the callback function is called with the status
-
     },
     getCardsByBoardId: async function (boardId) {
         return await apiGet(`/api/boards/${boardId}/cards/`);
@@ -24,8 +23,11 @@ export let dataHandler = {
     deleteBoard: async function (boardId) {
         const response = await apiDelete(`/api/boards/${boardId}`);
     },
-    deleteCard: async function (card_id) {
-        const response = await apiDelete(`/api/boards/cards/${card_id}`);
+    archiveCard: async function (cardId, data) {
+        const response = await apiPut(`/api/boards/cards/archive/${cardId}`, data);
+    },
+    deleteCard: async function (cardId) {
+        const response = await apiDelete(`/api/boards/cards/${cardId}`);
     },
     createNewBoard: async function (e) {
         e.preventDefault()
@@ -97,6 +99,7 @@ export let dataHandler = {
         let notValidInputInfo = document.getElementById("not_valid_info_login")
         let loginModal = document.getElementById("registerModal")
         let registerInfo = document.getElementById("register-info")
+        localStorage.setItem('login', email.value)
         notValidInputInfo.hidden = true
         if (!(email.value)) {
             email.classList.add("not_valid")
@@ -109,21 +112,19 @@ export let dataHandler = {
         try {
             await postData(url, formData)
                 .then((res) => {
-                    if (!res) {
+                    if (!res[0]) {
                         notValidInputInfo.hidden = false
                     }
                     else {
+                        console.log(res[1])
                         $(loginModal).modal('hide')
                         registerInfo.innerHTML = "Successfully logged in"
                         $(informationModal).modal()
                         notValidInputInfo.hidden = true
-                        $( "#navbar-buttons" ).load(window.location.href + " #navbar-buttons" );
-                        // domManager.addEventListener("#logout",
-                        //     "click",
-                        //     dataHandler.logout);
-                    //     domManager.addEventListener(`#create-board-button`,
-                    //         "click",
-                    //         boardModal.openNewBoardModal);
+                        document.getElementById("navbar-buttons").innerHTML = ""
+                        dataHandler.reloadBoards()
+                        document.getElementById("register-header").innerHTML = `signed in as ${res[1]}`
+
                     }
                 });
         } catch (error) {
@@ -169,7 +170,14 @@ export let dataHandler = {
     },
     logout: async function(e) {
         e.preventDefault()
+
         await apiGet(`/api/logout`)
+            .then((res) => {
+                localStorage.removeItem('login')
+                document.getElementById("navbar-buttons").innerHTML = ""
+                dataHandler.reloadBoards()
+
+        })
     },
     changeStatus: async function (cardId, data) {
         const response = await apiPut(`/api/boards/cards/${cardId}`, data)
@@ -224,5 +232,4 @@ async function apiPut(url, data) {
         },
         body: JSON.stringify(data)
     });
-    return response.json();
 }

@@ -1,6 +1,6 @@
 import mimetypes
 from dotenv import load_dotenv
-from flask import Flask, render_template, url_for, session, redirect, request
+from flask import Flask, render_template, url_for, session, redirect, request, jsonify
 
 import queires
 import util
@@ -44,6 +44,13 @@ def get_cards_for_board(board_id: int):
 def delete_board(board_id: int):
     queires.delete_cards_by_board(board_id)
     queires.delete_board(board_id)
+
+
+@app.route("/api/boards/cards/archive/<int:card_id>", methods=["PUT"])
+@json_response
+def archive_card(card_id: int):
+    archived_status = request.get_json()["archived_status"]
+    queires.archive_card(card_id, archived_status)
 
 
 @app.route("/api/boards/cards/<int:card_id>", methods=["DELETE", "PUT"])
@@ -128,7 +135,7 @@ def login():
             session['user'] = user
             session['username'] = username[0]
             login_success = True
-            return login_success
+            return login_success, username[0]
         else:
             login_success = False
             return login_success
@@ -141,7 +148,7 @@ def login():
 def logout():
     session.pop("id", None)
     session.pop("user", None)
-    return redirect('/')
+    return jsonify()
 
 
 if __name__ == '__main__':
