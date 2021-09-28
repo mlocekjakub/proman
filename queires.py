@@ -4,8 +4,8 @@ import data_manager
 def get_card_status(status_id):
     return data_manager.execute_select(
         """
-        SELECT * FROM statuses s
-        WHERE s.id = %(status_id)s
+        SELECT * FROM statuses
+        WHERE statuses.id = %(status_id)s
         ;
         """, {"status_id": status_id})
 

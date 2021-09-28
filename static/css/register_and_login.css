@@ -1,28 +1,14 @@
-#login-window{
-    display: flex;
+#register-form, #login-form{
     z-index: 20;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 36vw;
-    height: 40vh;
     border-radius: 10px;
     position: absolute;
-    top: 20vh;
     left: 50%;
-    transform: translate(-50%,0);
-    margin-top: 15px;
-    background-color: whitesmoke;
-    border: 1px solid #566DBA;
-    font-family: Lato, Helvetica, sans-serif;
-    font-weight: bold;
+    transform: translate(-50%, -20%);
 }
-#login-window input {
+#register-form input, #login-form input {
     margin-bottom: 15px;
     width: 30vh;
     height: 5vh;
-}
-#login-window input[type=submit] {
-    border-radius: 5px;
-    width: 10vh;
 }

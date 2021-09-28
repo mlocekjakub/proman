@@ -92,46 +92,52 @@ def get_statuses_for_board():
 
 def main():
     app.run(debug=True)
-
     with app.app_context():
         app.add_url_rule('/favicon.ico', redirect_to=url_for('static', filename='favicon/favicon.ico'))
 
 
-@app.route('/register', methods=['POST', 'GET'])
+@app.route('/api/register/user', methods=['POST'])
+@json_response
 def register():
-    if request.method == 'POST':
-        if not queires.check_if_user_in_database(request.form['email']):
-            email = request.form['email']
-            password = util.hash_password(request.form['password'])
-            queires.save_user(email, password)
-            return render_template('register.html', after_register=True)
-        else:
-            return render_template('register.html', username_taken=True)
-    return render_template('register.html')
+    json = request.get_json()
+    if not queires.check_if_user_in_database(json['email']):
+        email = json['email']
+        password = util.hash_password(json['password'])
+        queires.save_user(email, password)
+        username_taken = True
+        response = username_taken
+        return response
+    else:
+        username_taken = False
+        response = username_taken
+        return response
 
 
-@app.route('/login', methods=['POST', 'GET'])
+@app.route('/api/login/user', methods=['POST'])
+@json_response
 def login():
-    if request.method == 'POST':
-        if queires.check_if_user_in_database(request.form['email']):
-            password = request.form['password']
-            saved_password = queires.get_password_by_email(request.form['email'])['password']
-            if util.verify_password(password, saved_password):
-                user = request.form['email']
-                username = user.split('@')
-                user_id = queires.find_user_id_by_email(user)
-                session['id'] = user_id['id']
-                session['user'] = user
-                session['username'] = username[0]
-                return redirect('/')
-            else:
-                return render_template('login.html', wrong_data=True)
+    json = request.get_json()
+    if queires.check_if_user_in_database(json['email']):
+        password = json['password']
+        saved_password = queires.get_password_by_email(json['email'])[0]['password']
+        if util.verify_password(password, saved_password):
+            user = json['email']
+            username = user.split('@')
+            user_id = queires.find_user_id_by_email(user)
+            session['id'] = user_id[0]['id']
+            session['user'] = user
+            session['username'] = username[0]
+            login_success = True
+            return login_success
         else:
-            return render_template('login.html', wrong_data=True)
-    return render_template('login.html')
+            login_success = False
+            return login_success
+    else:
+        login_success = False
+        return login_success
 
 
-@app.route("/logout")
+@app.route("/api/logout")
 def logout():
     session.pop("id", None)
     session.pop("user", None)

@@ -86,6 +86,86 @@ export let dataHandler = {
             console.log(error);
         }
     },
+    loginUser: async function (e) {
+        e.preventDefault()
+        let email = document.getElementById("email-login")
+        let password = document.getElementById("password-login")
+        let formData = {"email": email.value, "password": password.value}
+        let url = document.getElementById("login-form").action
+        let informationModal = document.getElementById("information-modal")
+        let notValidInputInfo = document.getElementById("not_valid_info_login")
+        let loginModal = document.getElementById("registerModal")
+        let registerInfo = document.getElementById("register-info")
+        let navbarRefresh = document.getElementById("navbar-buttons")
+        // let navbar = document.getElementById("navbar-buttons").innerHTML
+        notValidInputInfo.hidden = true
+        if (!(email.value)) {
+            email.classList.add("not_valid")
+            return;
+        }
+        if (!(password.value)) {
+            password.classList.add("not_valid")
+            return;
+        }
+        try {
+            await postData(url, formData)
+                .then((res) => {
+                    if (!res) {
+                        notValidInputInfo.hidden = false
+                    }
+                    else {
+                        $(loginModal).modal('hide')
+                        registerInfo.innerHTML = "Successfully logged in"
+                        $(informationModal).modal()
+                        notValidInputInfo.hidden = true
+                        $("#navbar-buttons").load(" #navbar-buttons > *");
+                    }
+                });
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    registerUser: async function (e) {
+        e.preventDefault()
+        let email = document.getElementById("email-register")
+        let password = document.getElementById("password-register")
+        let formData = {"email": email.value, "password": password.value}
+        let url = document.getElementById("register-form").action
+        let registerModal = document.getElementById("registerModal")
+        let informationModal = document.getElementById("information-modal")
+        let notValidInputInfo = document.getElementById("not_valid_info_register")
+        let registerInfo = document.getElementById("register-info")
+        notValidInputInfo.hidden = true
+        if (!(email.value)) {
+            email.classList.add("not_valid")
+            return;
+        }
+        if (!(password.value)) {
+            password.classList.add("not_valid")
+            return;
+        }
+        try {
+            await postData(url, formData)
+                .then((res) => {
+                    if (res) {
+                        $(registerModal).modal('hide');
+                        registerInfo.innerHTML = "Successfully registered"
+                        $(informationModal).modal();
+                        notValidInputInfo.hidden = true
+                    }
+                    else {
+                        notValidInputInfo.hidden = false
+                    }
+                });
+        } catch (error) {
+            console.log(error);
+        }
+
+    },
+    logout: async function(e) {
+        e.preventDefault()
+        await apiGet(`/api/logout`)
+    },
     changeStatus: async function (cardId, data) {
         const response = await apiPut(`/api/boards/cards/${cardId}`, data)
     },
