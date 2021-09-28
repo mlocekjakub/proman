@@ -1,4 +1,5 @@
 import {boardsManager} from "../controller/boardsManager.js";
+import {domManager} from "../view/domManager";
 
 export let dataHandler = {
     getBoards: async function () {
@@ -96,8 +97,6 @@ export let dataHandler = {
         let notValidInputInfo = document.getElementById("not_valid_info_login")
         let loginModal = document.getElementById("registerModal")
         let registerInfo = document.getElementById("register-info")
-        let navbarRefresh = document.getElementById("navbar-buttons")
-        // let navbar = document.getElementById("navbar-buttons").innerHTML
         notValidInputInfo.hidden = true
         if (!(email.value)) {
             email.classList.add("not_valid")
@@ -118,7 +117,13 @@ export let dataHandler = {
                         registerInfo.innerHTML = "Successfully logged in"
                         $(informationModal).modal()
                         notValidInputInfo.hidden = true
-                        $("#navbar-buttons").load(" #navbar-buttons > *");
+                        $( "#navbar-buttons" ).load(window.location.href + " #navbar-buttons" );
+                        // domManager.addEventListener("#logout",
+                        //     "click",
+                        //     dataHandler.logout);
+                    //     domManager.addEventListener(`#create-board-button`,
+                    //         "click",
+                    //         boardModal.openNewBoardModal);
                     }
                 });
         } catch (error) {

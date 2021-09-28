@@ -200,7 +200,6 @@ function handleDrop(e) {
   cardsManager.dragItem = null;
 }
 
-
 function openNewBoardModal() {
     let newBoardModal = document.getElementById("new-board-modal")
     let newCardForm = document.getElementById("form-card")
