@@ -3,82 +3,152 @@ import {htmlFactory, htmlTemplates} from "../view/htmlFactory.js";
 import {domManager} from "../view/domManager.js";
 import {cardsManager} from "./cardsManager.js";
 
-let i = 0
-
+let isDropOverDiv = false
 export let boardsManager = {
-    loadBoards: async function () {
-        domManager.addEventListener(`#create-board-button`,
-            "click",
-            openNewBoardModal
-        );
-        domManager.addEventListener("#form-board",
-            "submit",
-            dataHandler.createNewBoard
-        );
-        domManager.addEventListener("#form-card",
-            "submit",
-            dataHandler.createNewCard
-        );
-        domManager.addEventListener("#board-title",
-            "click",
-            removeNotValidStyleBoard
-        );
-        domManager.addEventListener("#card-title",
-            "click",
-            removeNotValidStyleCard
-        );
-        const boards = await dataHandler.getBoards();
-        for (let board of boards) {
-            const boardBuilder = htmlFactory(htmlTemplates.board);
-            const content = boardBuilder(board);
-            domManager.addChild("#root", content);
-            domManager.addEventListener(
-                `#showContent[data-board-id="${board.id}"]`,
-                "click",
-                showHideButtonHandler
-            );
-            domManager.addEventListener(
-                `#board-title[data-board-id="${board.id}"]`,
-                "click",
-                showHideButtonHandler
-            );
-            domManager.addEventListener(`#add-card[data-board-id="${board.id}"]`,
-                "click",
-                openNewCardModal
-            );
-            domManager.addEventListener(
-                `#deleteBoardButton[data-board-id="${board.id}"]`,
-                "click",
-                deleteBoardButtonHandler
-            );
-            domManager.addEventListener(
-                `#archived-cards-button[data-board-id="${board.id}"]`,
+
+  loadBoards: async function () {
+    document.getElementById("navbar-buttons").innerHTML = ""
+    let navbarContent = "1"
+    if (localStorage.getItem('login')) {
+        const navbarBuilder = htmlFactory(htmlTemplates.loggedNavbar)
+        navbarContent = navbarBuilder()
+    }
+    else {
+        const navbarBuilder = htmlFactory(htmlTemplates.logoutNavbar)
+        navbarContent = navbarBuilder()
+    }
+    domManager.addChild("#navbar-buttons", navbarContent)
+    domManager.addEventListener(`#create-board-button`,
+          "click",
+          openNewBoardModal
+    );
+    domManager.addEventListener("#form-board",
+          "submit",
+          dataHandler.createNewBoard
+    );
+    domManager.addEventListener("#form-card",
+        "submit",
+        dataHandler.createNewCard
+    );
+    domManager.addEventListener("#login-form",
+        "submit",
+        dataHandler.loginUser
+    );
+    domManager.addEventListener("#register-form",
+        "submit",
+        dataHandler.registerUser
+    );
+    domManager.addEventListener("#board-title",
+        "click",
+        removeNotValidStyle
+    );
+    domManager.addEventListener("#card-title",
+        "click",
+        removeNotValidStyle
+    );
+    domManager.addEventListener("#email-login",
+        "click",
+        removeNotValidStyle
+    );
+    domManager.addEventListener("#password-login",
+        "click",
+        removeNotValidStyle
+    );
+    domManager.addEventListener("#email-register",
+        "click",
+        removeNotValidStyle
+    );
+    domManager.addEventListener("#password-register",
+        "click",
+        removeNotValidStyle
+    );
+    domManager.addEventListener("#logout",
+        "click",
+        logout
+    );
+    const boards = await dataHandler.getBoards();
+    for (let board of boards) {
+      const boardBuilder = htmlFactory(htmlTemplates.board);
+      const content = boardBuilder(board);
+      domManager.addChild("#root", content);
+      if (localStorage.getItem(board.id) === 'open') {
+          await cardsManager.loadCards(board.id)
+      }
+      domManager.addEventListener(
+        `#showContent[data-board-id="${board.id}"]`,
+        "click",
+        showHideButtonHandler
+      );
+      domManager.addEventListener(`#login-button`,
+          "click",
+          openLoginModal
+      );
+      domManager.addEventListener(`#register-button`,
+          "click",
+          openRegisterModal
+      );
+      domManager.addEventListener(
+          `#board-title[data-board-id="${board.id}"]`,
+          "click",
+          showHideButtonHandler
+      );
+      domManager.addEventListener(`#add-card[data-board-id="${board.id}"]`,
+          "click",
+          openNewCardModal
+      );
+      domManager.addEventListener(
+          `#deleteBoardButton[data-board-id="${board.id}"]`,
+          "click",
+          deleteBoardButtonHandler
+      );
+      domManager.addEventListener(
+        `#archived-cards-button[data-board-id="${board.id}"]`,
                 "click",
                 openArchiveCardsModal
             );
             domManager.addEventListener(
                 `#content-row-container[data-board-id="${board.id}"]`,
-                "drop",
-                handleDrop
-            );
-            domManager.addEventListener(
-                `#content-row-container[data-board-id="${board.id}"]`,
-                "dragover",
-                handleDragOver
-            );
-            domManager.addEventListener(
-                `#content-row-container[data-board-id="${board.id}"]`,
-                "dragenter",
-                handleDragEnter
-            );
-            domManager.addEventListener(
-                `#content-row-container[data-board-id="${board.id}"]`,
-                "dragleave",
-                handleDragLeave
-            );
-        }
-    },
+        "drop",
+        handleDrop
+      );
+      domManager.addEventListener(
+        `#content-row-container[data-board-id="${board.id}"]`,
+        "dragover",
+        handleDragOver
+      );
+      domManager.addEventListener(
+        `#content-row-container[data-board-id="${board.id}"]`,
+        "dragenter",
+        handleDragEnter
+      );
+      domManager.addEventListener(
+        `#content-row-container[data-board-id="${board.id}"]`,
+        "dragleave",
+        handleDragLeave
+      );
+    }
+  },
 };
+
+function openRegisterModal(e) {
+    e.preventDefault()
+    const registerForm = document.getElementById("register-form")
+    const loginForm = document.getElementById("login-form")
+    const registerModal = document.getElementById("registerModal")
+    loginForm.hidden = true
+    registerForm.hidden = false
+    $(registerModal).modal()
+}
+
+function openLoginModal(e) {
+    e.preventDefault()
+    const registerForm = document.getElementById("register-form")
+    const loginForm = document.getElementById("login-form")
+    const registerModal = document.getElementById("registerModal")
+    registerForm.hidden = true
+    loginForm.hidden = false
+    $(registerModal).modal()
+}
 
 function showHideButtonHandler(clickEvent) {
     const boardId = clickEvent.target.dataset.boardId;
@@ -92,13 +162,15 @@ function showHideButtonHandler(clickEvent) {
         addCardButton.parentNode.hidden = false;
         archiveCardButton.parentNode.hidden = false;
         element.innerHTML = "<i class=\"bi bi-chevron-double-up\"></i> Hide";
+        localStorage.setItem(boardId, 'open')
     } else {
-        addCardButton.parentNode.hidden = true;
+        addCardButton.parentNode.hidden = true
+        localStorage.setItem(boardId, 'close')
+        contentToHide.hidden = true
+        contentToHide.innerHTML = ""
+        statusesToHide.innerHTML = ""
+        element.innerHTML = "<i class=\"bi bi-chevron-double-down\"></i> Show"
         archiveCardButton.parentNode.hidden = true; //TODO if cards exists
-        contentToHide.hidden = true;
-        contentToHide.innerHTML = "";
-        statusesToHide.innerHTML = "";
-        element.innerHTML = "<i class=\"bi bi-chevron-double-down\"></i> Show";
     }
 }
 
@@ -114,10 +186,11 @@ function deleteBoardButtonHandler(clickEvent) {
     }
 }
 
+
 function handleDragOver(e) {
     e.preventDefault();
-    if (i === 0) {
-        i++;
+    if (!isDropOverDiv) {
+        isDropOverDiv = true
         if (e.target.id !== "content-columns-container" && e.target.id !== "content-row-container" && e.target.id !== "deleteCardButton") {
             e.target.insertAdjacentHTML("afterend", `<div id="drop-over">&nbsp</div>`);
         }
@@ -127,9 +200,9 @@ function handleDragOver(e) {
 function handleDragEnter(e) {
 }
 
-function handleDragLeave(e) {
-    if (i === 1) {
-        i--;
+function handleDragLeave() {
+    if (isDropOverDiv) {
+        isDropOverDiv = false
         let div = document.getElementById("drop-over");
         if (div) {
             div.remove()
@@ -218,13 +291,47 @@ async function openArchiveCardsModal(e) {
     $(archivedCardsModal).modal();
 }
 
-function removeNotValidStyleBoard() {
+function removeNotValidStyle() {
     let fieldToRemoveStyle = document.getElementById("board-title")
+    let fieldToRemoveStyle1 = document.getElementById("card-title")
+    let fieldToRemoveStyle2 = document.getElementById("password-login")
+    let fieldToRemoveStyle3 = document.getElementById("email-login")
+    let fieldToRemoveStyle4 = document.getElementById("password-register")
+    let fieldToRemoveStyle5 = document.getElementById("email-register")
     fieldToRemoveStyle.classList.remove("not_valid")
+    fieldToRemoveStyle1.classList.remove("not_valid")
+    fieldToRemoveStyle2.classList.remove("not_valid")
+    fieldToRemoveStyle3.classList.remove("not_valid")
+    fieldToRemoveStyle4.classList.remove("not_valid")
+    fieldToRemoveStyle5.classList.remove("not_valid")
 }
 
-function removeNotValidStyleCard() {
-    let fieldToRemoveStyle = document.getElementById("card-title")
-    fieldToRemoveStyle.classList.remove("not_valid")
+function logout(e) {
+    e.preventDefault()
+    dataHandler.logout(e)
+}
+
+function changeNameOfBoard(e) {
+    let card_id = e.target.getAttribute("data-board-id")
+    let previousInput = e.target.innerText
+    let isSave = false
+    e.target.innerHTML = `<div><input id="change-title" name="title" value="${previousInput}"></div>`
+
+    document.getElementById('change-title').addEventListener("keypress", function (eve) {
+        if (eve.key === 'Enter') {
+            let title = eve.target.value
+            dataHandler.changeBoardName(card_id, {'title': title})
+            isSave = true
+            document.activeElement.blur()
+        }
+    })
+    document.getElementById('change-title').addEventListener("focusout", function (eve) {
+        let title = eve.target.value
+        if (!isSave) {
+            e.target.innerHTML = `${previousInput}`
+        } else {
+            e.target.innerHTML = `${title}`
+        }
+    })
 }
 

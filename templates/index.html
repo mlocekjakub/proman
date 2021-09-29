@@ -66,6 +66,52 @@
         </div>
     </div>
 
+    <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content" style="height: 40vh; margin-bottom:20vh">
+          <div class="modal-header border-bottom-0">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body text-center">
+              <form action='/api/register/user' method='POST' id="register-form" hidden>
+        <label for="email-register" class="h5">USERNAME</label>
+        <input type="email" id="email-register" name="email" placeholder="email"/>
+        <label for="password-register" class="h5">PASSWORD</label>
+        <input type='password' id="password-register" name="password" placeholder="password"/>
+              <div id="not_valid_info_register" class="not_valid" hidden>username taken</div>
+        <input type='submit' value='register' class="btn btn-primary"
+               style="background-color: #566DBA; border-color: #566DBA;margin-top:2vh; width: 15vh; text-align: center"/>
+    </form>
+          <form action='/api/login/user' method='POST' id="login-form" hidden>
+        <label for="email-login" class="h5">USERNAME</label>
+        <input type="email" id="email-login" name="email" placeholder="email"/>
+        <label for="password-login" class="h5">PASSWORD</label>
+        <input type='password' id="password-login" name="password" placeholder="password"/>
+        <div id="not_valid_info_login" class="not_valid" hidden>wrong login or password</div>
+        <input type='submit' value='login' class="btn btn-primary"
+               style="background-color: #566DBA; border-color: #566DBA;margin-top:2vh; width:15vh; text-align: center"/>
+    </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" id="information-modal" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header border-bottom-0">
+              <h5 class="modal-title" id="register-info">Successfully registered</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+        </div>
+      </div>
+    </div>
+
     <div id="root"></div>
 
 

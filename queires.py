@@ -4,27 +4,52 @@ import data_manager
 def get_card_status(status_id):
     return data_manager.execute_select(
         """
-        SELECT * FROM statuses s
-        WHERE s.id = %(status_id)s
+        SELECT * FROM statuses
+        WHERE statuses.id = %(status_id)s
         ;
         """, {"status_id": status_id})
 
 
-def get_statuses_for_board():
+def get_status_id(board_id):
+    return data_manager.execute_select("""
+    SELECT MIN(id) as id
+    FROM statuses
+    WHERE board_id = %(board_id)s
+    """, {"board_id": board_id})
+
+
+def get_statuses_for_board(board_id):
     return data_manager.execute_select(
         """
         SELECT id, title 
         FROM statuses
+        WHERE board_id = %(board_id)s 
         order by statuses.id ASC;
-        """)
+        """, {"board_id": board_id})
 
 
 def add_new_board(board_title):
-    data_manager.execute_dml_statement(
+    return data_manager.execute_dml_statement(
         """
         INSERT INTO boards(title)
-        VALUES (%(title)s);
+        VALUES (%(title)s)
+        RETURNING id;
         """, {"title": board_title})
+
+
+def add_new_column(column_title, board_id):
+    return data_manager.execute_dml_statement("""
+        INSERT INTO statuses(title, board_id)
+        VALUES (%(column_title)s, %(board_id)s)
+    """, {"column_title": column_title, "board_id": board_id})
+
+
+def change_column_name(column_title, column_id):
+    return data_manager.execute_dml_statement("""
+        UPDATE statuses 
+        SET title = %(column_title)s
+        WHERE id = %(column_id)s
+    """, {"column_title": column_title, "column_id": column_id})
 
 
 def find_last_card_in_board_by_order(board_id):
@@ -33,21 +58,22 @@ def find_last_card_in_board_by_order(board_id):
         SELECT MAX(cards.card_order)+1 as order
         FROM cards 
         WHERE cards.board_id = (%(board_id)s);
-        """, {"board_id": board_id})
+    """, {"board_id": board_id})
 
 
-def add_new_card(title, board_id, card_order):
+def add_new_card(title, board_id, card_order, status_id):
     data_manager.execute_dml_statement(
         """
-        INSERT INTO cards(board_id,title,card_order)
-        VALUES (%(board_id)s, %(title)s, %(card_order)s);
-        """, {"board_id": board_id, "title": title, "card_order": card_order})
+        INSERT INTO cards(board_id,title,card_order, status_id)
+        VALUES (%(board_id)s, %(title)s, %(card_order)s, %(status_id)s);
+        """, {"board_id": board_id, "title": title, "card_order": card_order, "status_id": status_id})
 
 
 def get_boards():
     return data_manager.execute_select(
         """
-        SELECT * FROM boards;
+        SELECT * FROM boards
+        ORDER BY id;
         """)
 
 
@@ -63,6 +89,14 @@ def delete_cards_by_board(board_id):
     data_manager.execute_dml_statement(
         """
         DELETE FROM cards
+        WHERE board_id = %(board_id)s;
+        """, {"board_id": board_id})
+
+
+def delete_status_by_board(board_id):
+    data_manager.execute_dml_statement(
+        """
+        DELETE FROM statuses
         WHERE board_id = %(board_id)s;
         """, {"board_id": board_id})
 
@@ -127,6 +161,14 @@ def change_card_name(card_id, title):
         SET title = %(title)s
         WHERE id = %(card_id)s
         """, {"card_id": card_id, "title": title})
+
+
+def change_board_name(board_id, title):
+    return data_manager.execute_dml_statement(""" 
+        UPDATE boards 
+        SET title = %(title)s
+        WHERE id = %(board_id)s
+        """, {"board_id": board_id, "title": title})
 
 
 def change_card_order(card_order, board_id):

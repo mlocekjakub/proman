@@ -8,8 +8,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/register_and_login.css') }}">
+    <script src="{{ url_for('static', filename='js/registration.js') }}"></script>
     {% block link %}{% endblock %}
 </head>
 <body>
@@ -23,32 +26,31 @@
     </button>
     <div class="d-flex justify-content-end">
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav text-white">
-        <li class="nav-item ml-3">
-          <a class="nav-link navbar-btn border border-secondary rounded" id="create-board-button" style="background-color: whitesmoke">
-                New Board
-          </a>
-        </li>
-        <li class="nav-item ml-3">
-        {% if "user" in session %}
-          <a class="nav-link border border-secondary rounded" href="/logout" style="background-color: whitesmoke">
-              log out
-              {% else %}
-            <a class="nav-link border border-secondary rounded" href="/login" style="background-color: whitesmoke">
-              login
-              {% endif %}
-          </a>
-        </li>
-      <li class="nav-item ml-3">
-            {% if "user" in session %}
-                <a class="nav-link navbar-btn">
-              signed in as {{ session['username'] }}
-              {% else %}
-                <a class="nav-link navbar-btn border-secondary rounded" href="/register" style="background-color: whitesmoke">
-              register
-              {% endif %}
-          </a>
-        </li>
+      <ul class="navbar-nav text-white" id="navbar-buttons">
+{#        <li class="nav-item ml-3">#}
+{#          <a class="nav-link navbar-btn border border-secondary rounded" id="create-board-button" style="background-color: whitesmoke">#}
+{#                New Board#}
+{#          </a>#}
+{#        </li>#}
+{#        <li class="nav-item ml-3">#}
+{#            {% if "user" in session %}#}
+{#          <a class="nav-link border border-secondary rounded" id="logout" href="/logout" style="background-color: whitesmoke">#}
+{#              log out#}
+{#          </a>#}
+{#            {% else %}#}
+{#            <a class="nav-link border border-secondary rounded" href="/login" id="login-button" style="background-color: whitesmoke">#}
+{#              login#}
+{#            </a>#}
+{#            {% endif %}#}
+{#        </li>#}
+{#      <li class="nav-item ml-3">#}
+{#          {% if "user" in session %}#}
+{#              <a class="nav-link navbar-btn" id="register-header">signed in as {{session['username']}}</a>#}
+{#          {% else %}#}
+{#              <a class="nav-link navbar-btn border-secondary rounded" href="/register" id="register-button" style="background-color: whitesmoke">#}
+{#              register</a>#}
+{#          {% endif %}#}
+{#        </li>#}
       </ul>
     </div>
   </div>

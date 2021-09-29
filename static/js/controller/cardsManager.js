@@ -39,11 +39,16 @@ export let cardsManager = {
             "dblclick",
             changeNameOfCard
         );
+        domManager.addEventListener(
+            `#change-title`,
+            "focusin",
+            changeNameOfColumn
+        );
     },
     dragItem: null,
     loadCards: async function (boardId) {
         const cards = await dataHandler.getCardsByBoardId(boardId);
-        const columns = await dataHandler.getStatusesByBoardId()
+        const columns = await dataHandler.getStatusesByBoardId(boardId)
         for (let column of columns) {
             const columnBuilder = htmlFactory(htmlTemplates.column)
             const content = columnBuilder(column, boardId)[0]
@@ -118,21 +123,49 @@ function handleDragEnd(e) {
 }
 
 function changeNameOfCard(e) {
-    let tempInnerHTML = e.target;
-    let card_id = tempInnerHTML.getAttribute("data-card-id")
-    let value = e.target.innerText
-    e.target.innerHTML = `<div><input id="change-title" class="trans" name="title" value="${value}"></div>`
+    let card_id = e.target.getAttribute("data-card-id")
+    let previousInput = e.target.innerText
+    let isSave = false
+    e.target.innerHTML = `<div><input id="change-title" name="title" value="${previousInput}"></div>`
+
     document.getElementById('change-title').addEventListener("keypress", function (eve) {
-        console.log(eve.key)
         if (eve.key === 'Enter') {
             let title = eve.target.value
-            dataHandler.changeName(card_id, {'title': title}).then(r => console.log())
+            dataHandler.changeCardName(card_id, {'title': title})
+            isSave = true
+            document.activeElement.blur()
+        }
+    })
+    document.getElementById('change-title').addEventListener("focusout", function (eve) {
+        let title = eve.target.value
+        if (!isSave) {
+            e.target.innerHTML = `${previousInput} <i id="deleteCardButton" data-card-id="${card_id}" class="bi bi-trash2" hidden></i>`
+        } else {
             e.target.innerHTML = `${title} <i id="deleteCardButton" data-card-id="${card_id}" class="bi bi-trash2" hidden></i>`
         }
-
     })
-    document.getElementById('change-title').addEventListener("blur", function (eve) {
-        e.target.innerHTML = `${value} <i id="deleteCardButton" data-card-id="${card_id}" class="bi bi-trash2" hidden></i>`
+}
+function changeNameOfColumn(e) {
+    console.dir(e.target)
+    let column_id = e.target.parentNode.parentNode.getAttribute("data-column-id")
+    let previousInput = e.target.innerText
+    let isSave = false
+    e.target.innerHTML = `<div><input id="change-title" name="title" value="${previousInput}"></div>`
+    document.getElementById('change-title').addEventListener("keypress", function (eve) {
+        if (eve.key === 'Enter') {
+            let title = eve.target.value
+            dataHandler.changeColumnName(column_id, {'title': title})
+            isSave = true
+            document.activeElement.blur()
+        }
+    })
+    document.getElementById('change-title').addEventListener("focusout", function (eve) {
+        let title = eve.target.value
+        if (!isSave) {
+            e.target.innerHTML = `${previousInput} <i id="deleteCardButton" data-card-id="${column_id}" class="bi bi-trash2" hidden></i>`
+        } else {
+            e.target.innerHTML = `${title} <i id="deleteCardButton" data-card-id="${column_id}" class="bi bi-trash2" hidden></i>`
+        }
     })
 }
 
