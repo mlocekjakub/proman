@@ -8,17 +8,15 @@ let i = 0
 export let boardsManager = {
 
   loadBoards: async function () {
+    document.getElementById("navbar-buttons").innerHTML = ""
     let navbarContent = "1"
-      console.log(navbarContent)
     if (localStorage.getItem('login')) {
         const navbarBuilder = htmlFactory(htmlTemplates.loggedNavbar)
         navbarContent = navbarBuilder()
-        console.log(navbarContent,"login")
     }
     else {
         const navbarBuilder = htmlFactory(htmlTemplates.logoutNavbar)
         navbarContent = navbarBuilder()
-        console.log(navbarContent, "logout")
     }
     domManager.addChild("#navbar-buttons", navbarContent)
     domManager.addEventListener(`#create-board-button`,
