@@ -17,7 +17,11 @@ export let cardsManager = {
         domManager.addEventListener(
             `#deleteCardButton[data-card-id="${card_id}"]`,
             "click",
-            deleteCardButtonHandler
+            deleteCardButtonHandler);
+        domManager.addEventListener(
+            `#archiveCardButton[data-card-id="${card_id}"]`,
+            "click",
+            archiveCardButtonHandler
         );
         domManager.addEventListener(
             `.cards[data-card-id="${card_id}"]`,
@@ -33,6 +37,11 @@ export let cardsManager = {
             `.cards[data-card-id="${card_id}"]`,
             "dblclick",
             changeNameOfCard
+        );
+        domManager.addEventListener(
+            `#change-title`,
+            "focusin",
+            changeNameOfColumn
         );
     },
     dragItem: null,
@@ -63,12 +72,25 @@ function showButton(event) {
     }
 }
 
-    function hideButton(event) {
-        let buttons = event.target.getElementsByTagName('i')
-        for (let button of buttons) {
-            button.hidden = true;
+function hideButton(event) {
+    let buttons = event.target.getElementsByTagName('i')
+    for (let button of buttons) {
+        button.hidden = true;
+    }
+}
+
+function archiveCardButtonHandler(clickEvent) {
+    const cardId = clickEvent.target.dataset.cardId;
+    const cardsToArchive = document.getElementsByClassName('cards');
+    for (let card of cardsToArchive) {
+        if (cardId === card.getAttribute('data-card-id')) {
+            card.remove();
+            const archived_status = true;
+            let data = {"archived_status": archived_status};
+            dataHandler.archiveCard(cardId, data);
         }
     }
+}
 
 function deleteCardButtonHandler(clickEvent) {
     const cardId = clickEvent.target.dataset.cardId;
@@ -81,17 +103,17 @@ function deleteCardButtonHandler(clickEvent) {
     }
 }
 
-    function handleDragStart(e) {
-        let node = e.currentTarget
-        cardsManager.dragItem = node
-        e.target.classList.add("dragged", "drag-feedback")
-        deferredOriginChanges(this, "drag-feedback")
-    }
+function handleDragStart(e) {
+    let node = e.currentTarget
+    cardsManager.dragItem = node
+    e.target.classList.add("dragged", "drag-feedback")
+    deferredOriginChanges(this, "drag-feedback")
+}
 
-    function handleDragEnd(e) {
-        e.target.classList.remove("dragged")
-        cardsManager.dragItem = null
-    }
+function handleDragEnd(e) {
+    e.target.classList.remove("dragged")
+    cardsManager.dragItem = null
+}
 
 function changeNameOfCard(e) {
     let card_id = e.target.getAttribute("data-card-id")
@@ -109,18 +131,41 @@ function changeNameOfCard(e) {
     })
     document.getElementById('change-title').addEventListener("focusout", function (eve) {
         let title = eve.target.value
-        if(!isSave) {
+        if (!isSave) {
             e.target.innerHTML = `${previousInput} <i id="deleteCardButton" data-card-id="${card_id}" class="bi bi-trash2" hidden></i>`
-        }else{
+        } else {
             e.target.innerHTML = `${title} <i id="deleteCardButton" data-card-id="${card_id}" class="bi bi-trash2" hidden></i>`
-        }})
+        }
+    })
+}
+function changeNameOfColumn(e) {
+    console.dir(e.target)
+    let column_id = e.target.parentNode.parentNode.getAttribute("data-column-id")
+    let previousInput = e.target.innerText
+    let isSave = false
+    e.target.innerHTML = `<div><input id="change-title" name="title" value="${previousInput}"></div>`
+    document.getElementById('change-title').addEventListener("keypress", function (eve) {
+        if (eve.key === 'Enter') {
+            let title = eve.target.value
+            dataHandler.changeColumnName(column_id, {'title': title})
+            isSave = true
+            document.activeElement.blur()
+        }
+    })
+    document.getElementById('change-title').addEventListener("focusout", function (eve) {
+        let title = eve.target.value
+        if (!isSave) {
+            e.target.innerHTML = `${previousInput} <i id="deleteCardButton" data-card-id="${column_id}" class="bi bi-trash2" hidden></i>`
+        } else {
+            e.target.innerHTML = `${title} <i id="deleteCardButton" data-card-id="${column_id}" class="bi bi-trash2" hidden></i>`
+        }
+    })
 }
 
-
-    function deferredOriginChanges(origin, dragFeedbackClassName) {
-        setTimeout(() => {
-            origin.classList.remove(dragFeedbackClassName);
-        });
-    }
+function deferredOriginChanges(origin, dragFeedbackClassName) {
+    setTimeout(() => {
+        origin.classList.remove(dragFeedbackClassName);
+    });
+}
 
 

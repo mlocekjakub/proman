@@ -1,4 +1,5 @@
 import {boardsManager} from "../controller/boardsManager.js";
+import {domManager} from "../view/domManager.js";
 
 export let dataHandler = {
     getBoards: async function () {
@@ -12,7 +13,6 @@ export let dataHandler = {
     },
     getStatus: async function (statusId) {
         // the status is retrieved and then the callback function is called with the status
-
     },
     getCardsByBoardId: async function (boardId) {
         return await apiGet(`/api/boards/${boardId}/cards/`);
@@ -23,8 +23,11 @@ export let dataHandler = {
     deleteBoard: async function (boardId) {
         const response = await apiDelete(`/api/boards/${boardId}`);
     },
-    deleteCard: async function (card_id) {
-        const response = await apiDelete(`/api/boards/cards/${card_id}`);
+    archiveCard: async function (cardId, data) {
+        const response = await apiPut(`/api/boards/cards/archive/${cardId}`, data);
+    },
+    deleteCard: async function (cardId) {
+        const response = await apiDelete(`/api/boards/cards/${cardId}`);
     },
     createNewBoard: async function (e) {
         e.preventDefault()
@@ -85,6 +88,114 @@ export let dataHandler = {
             console.log(error);
         }
     },
+
+    createNewColumn: async function (e) {
+        e.preventDefault()
+        const board = e.currentTarget
+        let boardId = board.getAttribute("data-board-id")
+        const url = "/api/boards/columns";
+        let data = {"boardId": boardId}
+        try {
+            await apiPost(url, data)
+                .then(() => {
+                    console.log("yo")
+                    dataHandler.reloadBoards()
+                });
+        } catch (error) {
+            console.log(error);
+        }
+    },
+
+    loginUser: async function (e) {
+        e.preventDefault()
+        let email = document.getElementById("email-login")
+        let password = document.getElementById("password-login")
+        let formData = {"email": email.value, "password": password.value}
+        let url = document.getElementById("login-form").action
+        let informationModal = document.getElementById("information-modal")
+        let notValidInputInfo = document.getElementById("not_valid_info_login")
+        let loginModal = document.getElementById("registerModal")
+        let registerInfo = document.getElementById("register-info")
+        localStorage.setItem('login', email.value)
+        notValidInputInfo.hidden = true
+        if (!(email.value)) {
+            email.classList.add("not_valid")
+            return;
+        }
+        if (!(password.value)) {
+            password.classList.add("not_valid")
+            return;
+        }
+        try {
+            await postData(url, formData)
+                .then((res) => {
+                    if (!res[0]) {
+                        notValidInputInfo.hidden = false
+                    }
+                    else {
+                        console.log(res[1])
+                        $(loginModal).modal('hide')
+                        registerInfo.innerHTML = "Successfully logged in"
+                        $(informationModal).modal()
+                        notValidInputInfo.hidden = true
+                        // document.getElementById("navbar-buttons").innerHTML = ""
+                        dataHandler.reloadBoards()
+                        document.getElementById("register-header").innerHTML = `signed in as ${res[1]}`
+
+                    }
+                });
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    registerUser: async function (e) {
+        e.preventDefault()
+        let email = document.getElementById("email-register")
+        let password = document.getElementById("password-register")
+        let formData = {"email": email.value, "password": password.value}
+        let url = document.getElementById("register-form").action
+        let registerModal = document.getElementById("registerModal")
+        let informationModal = document.getElementById("information-modal")
+        let notValidInputInfo = document.getElementById("not_valid_info_register")
+        let registerInfo = document.getElementById("register-info")
+        notValidInputInfo.hidden = true
+        if (!(email.value)) {
+            email.classList.add("not_valid")
+            return;
+        }
+        if (!(password.value)) {
+            password.classList.add("not_valid")
+            return;
+        }
+        try {
+            await postData(url, formData)
+                .then((res) => {
+                    if (res) {
+                        $(registerModal).modal('hide');
+                        registerInfo.innerHTML = "Successfully registered"
+                        $(informationModal).modal();
+                        notValidInputInfo.hidden = true
+                    }
+                    else {
+                        notValidInputInfo.hidden = false
+                    }
+                });
+        } catch (error) {
+            console.log(error);
+        }
+
+    },
+    logout: async function(e) {
+        e.preventDefault()
+
+        await apiGet(`/api/logout`)
+            .then((res) => {
+                localStorage.removeItem('login')
+                // document.getElementById("navbar-buttons").innerHTML = ""
+                dataHandler.reloadBoards()
+
+        })
+    },
     changeStatus: async function (cardId, data) {
         const response = await apiPut(`/api/boards/cards/${cardId}`, data)
     },
@@ -93,6 +204,9 @@ export let dataHandler = {
     },
     changeBoardName: async function (boardId, data) {
         const response = await apiPut(`/api/boards/name/${boardId}`, data)
+    },
+    changeColumnName: async function (columnId, data) {
+        const response = await apiPut(`/api/boards/columns/name/${columnId}`, data)
     }
 };
 
