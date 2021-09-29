@@ -1,5 +1,5 @@
 import {boardsManager} from "../controller/boardsManager.js";
-import {domManager} from "../view/domManager.js";
+
 
 export let dataHandler = {
     getBoards: async function () {
@@ -79,6 +79,7 @@ export let dataHandler = {
                     document.getElementById("form-card").hidden = true
                     cardHeader.innerHTML = "successfully added card <i class=\"bi bi-check2-all\"></i>"
                     cardHeader.style.color = "#3cb371"
+
                     setTimeout(function () {
                         dataHandler.reloadBoards();
                     }, 1000);

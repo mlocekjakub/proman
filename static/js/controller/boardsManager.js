@@ -5,129 +5,124 @@ import {cardsManager} from "./cardsManager.js";
 
 let isDropOverDiv = false
 export let boardsManager = {
-    loadBoards: async function () {
-        document.getElementById("navbar-buttons").innerHTML = ""
-        let navbarContent;
-        if (localStorage.getItem('login')) {
-            const navbarBuilder = htmlFactory(htmlTemplates.loggedNavbar)
-            navbarContent = navbarBuilder()
-        } else {
-            const navbarBuilder = htmlFactory(htmlTemplates.logoutNavbar)
-            navbarContent = navbarBuilder()
-        }
 
-        domManager.addChild("#navbar-buttons", navbarContent)
-        domManager.addEventListener(`#create-board-button`,
-            "click",
-            openNewBoardModal
-        );
-        domManager.addEventListener("#form-board",
-            "submit",
-            dataHandler.createNewBoard
-        );
-        domManager.addEventListener("#form-card",
-            "submit",
-            dataHandler.createNewCard
-        );
-        domManager.addEventListener("#login-form",
-            "submit",
-            dataHandler.loginUser
-        );
-        domManager.addEventListener("#register-form",
-            "submit",
-            dataHandler.registerUser
-        );
-        domManager.addEventListener("#board-title",
-            "click",
-            removeNotValidStyle
-        );
-        domManager.addEventListener("#card-title",
-            "click",
-            removeNotValidStyle
-        );
-        domManager.addEventListener("#email-login",
-            "click",
-            removeNotValidStyle
-        );
-        domManager.addEventListener("#password-login",
-            "click",
-            removeNotValidStyle
-        );
-        domManager.addEventListener("#email-register",
-            "click",
-            removeNotValidStyle
-        );
-        domManager.addEventListener("#password-register",
-            "click",
-            removeNotValidStyle
-        );
-        domManager.addEventListener("#logout",
-            "click",
-            logout
-        );
-        const boards = await dataHandler.getBoards();
-        for (let board of boards) {
-            const boardBuilder = htmlFactory(htmlTemplates.board);
-            const content = boardBuilder(board);
-            domManager.addChild("#root", content);
-            domManager.addEventListener(
-                `#board-title[data-board-id="${board.id}"]`,
-                "dblclick",
-                changeNameOfBoard
-            );
-            domManager.addEventListener(
-                `#showContent[data-board-id="${board.id}"]`,
-                "click",
-                showHideButtonHandler);
-            domManager.addEventListener(`#login-button`,
-                "click",
-                openLoginModal
-            );
-            domManager.addEventListener(`#register-button`,
-                "click",
-                openRegisterModal
-            );
-            // domManager.addEventListener(
-            //     `#header-Row[data-board-id="${board.id}"]`,
-            //     "click",
-            //     showHideButtonHandler
-            // );
-            domManager.addEventListener(`#add-card[data-board-id="${board.id}"]`,
-                "click",
-                openNewCardModal
-            );
-            domManager.addEventListener(`#add-column[data-board-id="${board.id}"]`,
-                "click",
-                dataHandler.createNewColumn
-            );
-            domManager.addEventListener(
-                `#deleteBoardButton[data-board-id="${board.id}"]`,
-                "click",
-                deleteBoardButtonHandler
-            );
-            domManager.addEventListener(
-                `#content-row-container[data-board-id="${board.id}"]`,
-                "drop",
-                handleDrop
-            );
-            domManager.addEventListener(
-                `#content-row-container[data-board-id="${board.id}"]`,
-                "dragover",
-                handleDragOver
-            );
-            domManager.addEventListener(
-                `#content-row-container[data-board-id="${board.id}"]`,
-                "dragenter",
-                handleDragEnter
-            );
-            domManager.addEventListener(
-                `#content-row-container[data-board-id="${board.id}"]`,
-                "dragleave",
-                handleDragLeave
-            );
-
-        }
-    },
+  loadBoards: async function () {
+    document.getElementById("navbar-buttons").innerHTML = ""
+    let navbarContent = "1"
+    if (localStorage.getItem('login')) {
+        const navbarBuilder = htmlFactory(htmlTemplates.loggedNavbar)
+        navbarContent = navbarBuilder()
+    }
+    else {
+        const navbarBuilder = htmlFactory(htmlTemplates.logoutNavbar)
+        navbarContent = navbarBuilder()
+    }
+    domManager.addChild("#navbar-buttons", navbarContent)
+    domManager.addEventListener(`#create-board-button`,
+          "click",
+          openNewBoardModal
+    );
+    domManager.addEventListener("#form-board",
+          "submit",
+          dataHandler.createNewBoard
+    );
+    domManager.addEventListener("#form-card",
+        "submit",
+        dataHandler.createNewCard
+    );
+    domManager.addEventListener("#login-form",
+        "submit",
+        dataHandler.loginUser
+    );
+    domManager.addEventListener("#register-form",
+        "submit",
+        dataHandler.registerUser
+    );
+    domManager.addEventListener("#board-title",
+        "click",
+        removeNotValidStyle
+    );
+    domManager.addEventListener("#card-title",
+        "click",
+        removeNotValidStyle
+    );
+    domManager.addEventListener("#email-login",
+        "click",
+        removeNotValidStyle
+    );
+    domManager.addEventListener("#password-login",
+        "click",
+        removeNotValidStyle
+    );
+    domManager.addEventListener("#email-register",
+        "click",
+        removeNotValidStyle
+    );
+    domManager.addEventListener("#password-register",
+        "click",
+        removeNotValidStyle
+    );
+    domManager.addEventListener("#logout",
+        "click",
+        logout
+    );
+    const boards = await dataHandler.getBoards();
+    for (let board of boards) {
+      const boardBuilder = htmlFactory(htmlTemplates.board);
+      const content = boardBuilder(board);
+      domManager.addChild("#root", content);
+      if (localStorage.getItem(board.id) === 'open') {
+          await cardsManager.loadCards(board.id)
+      }
+      domManager.addEventListener(
+        `#showContent[data-board-id="${board.id}"]`,
+        "click",
+        showHideButtonHandler
+      );
+      domManager.addEventListener(`#login-button`,
+          "click",
+          openLoginModal
+      );
+      domManager.addEventListener(`#register-button`,
+          "click",
+          openRegisterModal
+      );
+      domManager.addEventListener(
+          `#board-title[data-board-id="${board.id}"]`,
+          "click",
+          showHideButtonHandler
+      );
+      domManager.addEventListener(`#add-card[data-board-id="${board.id}"]`,
+          "click",
+          openNewCardModal
+      );
+      domManager.addEventListener(
+          `#deleteBoardButton[data-board-id="${board.id}"]`,
+          "click",
+          deleteBoardButtonHandler
+      );
+      domManager.addEventListener(
+        `#content-row-container[data-board-id="${board.id}"]`,
+        "drop",
+        handleDrop
+      );
+      domManager.addEventListener(
+        `#content-row-container[data-board-id="${board.id}"]`,
+        "dragover",
+        handleDragOver
+      );
+      domManager.addEventListener(
+        `#content-row-container[data-board-id="${board.id}"]`,
+        "dragenter",
+        handleDragEnter
+      );
+      domManager.addEventListener(
+        `#content-row-container[data-board-id="${board.id}"]`,
+        "dragleave",
+        handleDragLeave
+      );
+    }
+  },
 };
 
 function openRegisterModal(e) {
@@ -158,13 +153,15 @@ function showHideButtonHandler(clickEvent) {
     const addCardButton = document.querySelector(`#add-card[data-board-id="${boardId}"]`)
     const addColumnButton = document.querySelector(`#add-column[data-board-id="${boardId}"]`)
     if (element.innerHTML === "<i class=\"bi bi-chevron-double-down\"></i> Show") {
-        cardsManager.loadCards(boardId);
         addCardButton.parentNode.hidden = false
         addColumnButton.parentNode.hidden = false
+        cardsManager.loadCards(boardId);
+        localStorage.setItem(boardId, 'open')
         element.innerHTML = "<i class=\"bi bi-chevron-double-up\"></i> Hide"
     } else {
         addCardButton.parentNode.hidden = true
         addColumnButton.parentNode.hidden = true
+        localStorage.setItem(boardId, 'close')
         contentToHide.hidden = true
         contentToHide.innerHTML = ""
         statusesToHide.innerHTML = ""

@@ -1,9 +1,11 @@
+
 export const htmlTemplates = {
     board: 1,
     card: 2,
     column: 3,
     loggedNavbar: 4,
     logoutNavbar: 5
+
 }
 
 export function htmlFactory(template) {
@@ -25,8 +27,27 @@ export function htmlFactory(template) {
             }
     }
 }
+function openedBoardContent(board) {
+    return ` <div class="container">
+  <div class="row bg-light" id="header-Row" data-board-id="${board.id}">
+      <div class="col h3 margin_header" id="board-title" data-board-id="${board.id}">${board.title}
+    </div>
+    <div class="col-md-auto margin_header mr-0"><button type="button" data-board-id="${board.id}" class="btn btn-outline-dark btn-sm" id="add-card">+ Add Card</button>
+    </div>
+      <div class="col-md-auto margin_header mr-0 p-0"><button type="button" class="btn btn-outline-dark btn-sm" id="showContent" data-board-id="${board.id}"><i class="bi bi-chevron-double-up"></i> Hide</button>
+    </div>
+    <div class="col-md-auto margin_header">
+    <i id="deleteBoardButton" data-board-id="${board.id}" class="bi bi-trash"></i>
+    </div>
+  </div> 
+  <div class="row" data-board-id="${board.id}" id ="statuses-row-container">
+  </div>
+  <div class="row" data-board-id="${board.id}" id="content-row-container">
+</div>
+  </div>`;
+}
 
-function boardBuilder(board) {
+function closedBoardContent(board) {
     return ` <div class="container">
   <div class="row bg-light" id="header-Row" data-board-id="${board.id}">
       <div class="col h3 margin_header" id="board-title" data-board-id="${board.id}">${board.title}</i>
@@ -44,12 +65,18 @@ function boardBuilder(board) {
 </div>
   </div>`;
 }
-
+function boardBuilder(board) {
+    if (localStorage.getItem(board.id) === 'open') {
+        return openedBoardContent(board)
+    }
+    else {
+        return closedBoardContent(board)
+    }
+}
 function cardBuilder(card) {
     return `<div draggable="true" data-card-id="${card.id}" data-cardorder-id="${card.card_order}" class="cards border border-success rounded">
-                <i id="archiveCardButton" data-card-id="${card.id}" class="bi bi-archive" hidden></i>
                 ${card.title}
-                <i id="deleteCardButton" data-card-id="${card.id}" class="bi bi-trash2" hidden></i>
+                <i id="archiveCardButton" style="float:right;" data-card-id="${card.id}" class="bi bi-archive" hidden></i>
             </div>`;
 }
 
