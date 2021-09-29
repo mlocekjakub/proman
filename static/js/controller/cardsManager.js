@@ -38,7 +38,7 @@ export let cardsManager = {
     dragItem: null,
     loadCards: async function (boardId) {
         const cards = await dataHandler.getCardsByBoardId(boardId);
-        const columns = await dataHandler.getStatusesByBoardId()
+        const columns = await dataHandler.getStatusesByBoardId(boardId)
         for (let column of columns) {
             const columnBuilder = htmlFactory(htmlTemplates.column)
             const content = columnBuilder(column, boardId)[0]
@@ -63,12 +63,12 @@ function showButton(event) {
     }
 }
 
-function hideButton(event) {
-    let buttons = event.target.getElementsByTagName('i')
-    for (let button of buttons) {
-        button.hidden = true;
+    function hideButton(event) {
+        let buttons = event.target.getElementsByTagName('i')
+        for (let button of buttons) {
+            button.hidden = true;
+        }
     }
-}
 
 function deleteCardButtonHandler(clickEvent) {
     const cardId = clickEvent.target.dataset.cardId;
@@ -81,17 +81,17 @@ function deleteCardButtonHandler(clickEvent) {
     }
 }
 
-function handleDragStart(e) {
-    let node = e.currentTarget
-    cardsManager.dragItem = node
-    e.target.classList.add("dragged", "drag-feedback")
-    deferredOriginChanges(this, "drag-feedback")
-}
+    function handleDragStart(e) {
+        let node = e.currentTarget
+        cardsManager.dragItem = node
+        e.target.classList.add("dragged", "drag-feedback")
+        deferredOriginChanges(this, "drag-feedback")
+    }
 
-function handleDragEnd(e) {
-    e.target.classList.remove("dragged")
-    cardsManager.dragItem = null
-}
+    function handleDragEnd(e) {
+        e.target.classList.remove("dragged")
+        cardsManager.dragItem = null
+    }
 
 function changeNameOfCard(e) {
     let card_id = e.target.getAttribute("data-card-id")
@@ -117,9 +117,10 @@ function changeNameOfCard(e) {
 }
 
 
-function deferredOriginChanges(origin, dragFeedbackClassName) {
-    setTimeout(() => {
-        origin.classList.remove(dragFeedbackClassName);
-    });
-}
+    function deferredOriginChanges(origin, dragFeedbackClassName) {
+        setTimeout(() => {
+            origin.classList.remove(dragFeedbackClassName);
+        });
+    }
+
 

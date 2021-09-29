@@ -83,3 +83,9 @@ body{
     background-color: rgba(111, 143, 175, 0.24);
     min-height: 18vh;
 }
+#board-title:hover {
+    cursor: pointer;
+}
+#header-Row:hover {
+    border: 1px solid #6082B6;
+}

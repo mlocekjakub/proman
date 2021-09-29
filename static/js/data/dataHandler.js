@@ -2,24 +2,20 @@ import {boardsManager} from "../controller/boardsManager.js";
 
 export let dataHandler = {
     getBoards: async function () {
-        const response = await apiGet("/api/boards");
-        return response;
+        return await apiGet("/api/boards");
     },
     getBoard: async function (boardId) {
         // the board is retrieved and then the callback function is called with the board
     },
-    getStatusesByBoardId: async function () {
-        const response = await apiGet(`/api/statuses`);
-        return response;
+    getStatusesByBoardId: async function (boardId) {
+        return await apiGet(`/api/statuses/${boardId}`);
     },
     getStatus: async function (statusId) {
         // the status is retrieved and then the callback function is called with the status
 
     },
     getCardsByBoardId: async function (boardId) {
-        const response = await apiGet(`/api/boards/${boardId}/cards/`);
-        return response;
-        ``
+        return await apiGet(`/api/boards/${boardId}/cards/`);
     },
     getCard: async function (cardId) {
         // the card is retrieved and then the callback function is called with the card
@@ -61,6 +57,7 @@ export let dataHandler = {
         $(modal).modal('hide')
         await boardsManager.loadBoards()
     },
+
     createNewCard: async function (e) {
         e.preventDefault()
         let title = document.getElementById("card-title")
@@ -104,11 +101,9 @@ async function apiGet(url) {
         method: "GET",
     });
     if (response.status === 200) {
-        let data = response.json();
-        return data;
+        return response.json();
     }
 }
-
 
 async function apiPost(url, data) {
     const response = await fetch(url, {

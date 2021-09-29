@@ -1,5 +1,4 @@
 import mimetypes
-
 from dotenv import load_dotenv
 from flask import Flask, render_template, url_for, session, redirect, request
 
@@ -78,8 +77,11 @@ def change_boards_name(board_id: int):
 @json_response
 def create_new_board():
     board_title = request.get_json()
-    print(board_title)
-    queires.add_new_board(board_title)
+    new_board_id = queires.add_new_board(board_title)
+    queires.add_new_column("new", new_board_id)
+    queires.add_new_column("in progress", new_board_id)
+    queires.add_new_column("testing", new_board_id)
+    queires.add_new_column("done", new_board_id)
 
 
 @app.route("/api/boards/cards", methods=["POST"])
@@ -93,16 +95,15 @@ def create_new_card():
     queires.add_new_card(card_title, board_id, card_order)
 
 
-@app.route("/api/statuses")
+@app.route("/api/statuses/<board_id>")
 @json_response
-def get_statuses_for_board():
-    return queires.get_statuses_for_board()
+def get_statuses_for_board(board_id):
+    return queires.get_statuses_for_board(board_id)
 
 
 def main():
     app.run(debug=True)
 
-    # Serving the favicon
     with app.app_context():
         app.add_url_rule('/favicon.ico', redirect_to=url_for('static', filename='favicon/favicon.ico'))
 

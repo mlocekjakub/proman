@@ -13,13 +13,22 @@ def get_card_status(status_id):
     return status
 
 
-def get_statuses_for_board():
+def get_status_id(board_id):
+    return data_manager.execute_select("""
+    SELECT MIN(id) as id
+    FROM statuses
+    WHERE board_id = %(board_id)s
+    """, {"board_id": board_id})
+
+
+def get_statuses_for_board(board_id):
     statuses = data_manager.execute_select(
         """
         SELECT id, title 
         FROM statuses
+        WHERE board_id = %(board_id)s 
         order by statuses.id ASC;
-        """)
+        """, {"board_id": board_id})
     return statuses
 
 
@@ -27,10 +36,18 @@ def get_statuses_for_board():
 def add_new_board(cursor, board_title):
     status = """
         INSERT INTO boards(title)
-        VALUES (%(title)s);
+        VALUES (%(title)s)
+        RETURNING id;
         """
     arguments = {"title": board_title}
     cursor.execute(status, arguments)
+
+
+def add_new_column(column_title, board_id):
+    return data_manager.execute_dml_statement("""
+        INSERT INTO statuses(title, board_id)
+        VALUES (%(column_title)s, %(board_id)s)
+    """, {"column_title": column_title, "board_id": board_id})
 
 
 def find_last_card_in_board_by_order(board_id):
@@ -39,7 +56,7 @@ def find_last_card_in_board_by_order(board_id):
         SELECT MAX(cards.card_order)+1 as order
         FROM cards 
         WHERE cards.board_id = (%(board_id)s);
-        """
+    """
         , {"board_id": board_id})
     return status
 
@@ -58,7 +75,7 @@ def get_boards():
     return data_manager.execute_select(
         """
         SELECT * FROM boards
-        ;
+        ORDER BY id;
         """
     )
 
