@@ -39,6 +39,12 @@ def get_cards_for_board(board_id: int):
     return queires.get_cards_for_board(board_id)
 
 
+@app.route("/api/boards/<int:board_id>/archived-cards/")
+@json_response
+def get_archived_cards_by_board(board_id: int):
+    return queires.get_archived_cards(board_id)
+
+
 @app.route("/api/boards/<int:board_id>", methods=["DELETE"])
 @json_response
 def delete_board(board_id: int):
@@ -46,11 +52,11 @@ def delete_board(board_id: int):
     queires.delete_board(board_id)
 
 
-@app.route("/api/boards/cards/archive/<int:card_id>", methods=["PUT"])
+@app.route("/api/boards/cards/archive/<int:card_id>", methods=["PUT"])  # todo change route for shorter
 @json_response
-def archive_card(card_id: int):
+def change_archive_card_status(card_id: int):
     archived_status = request.get_json()["archived_status"]
-    queires.archive_card(card_id, archived_status)
+    queires.change_archive_card_status(card_id, archived_status)
 
 
 @app.route("/api/boards/cards/<int:card_id>", methods=["DELETE", "PUT"])

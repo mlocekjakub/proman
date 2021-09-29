@@ -20,10 +20,13 @@ export let dataHandler = {
     getCard: async function (cardId) {
         // the card is retrieved and then the callback function is called with the card
     },
+    getArchivedCardsByBoard: async function (boardId) {
+        return await apiGet(`/api/boards/${boardId}/archived-cards/`);
+    },
     deleteBoard: async function (boardId) {
         const response = await apiDelete(`/api/boards/${boardId}`);
     },
-    archiveCard: async function (cardId, data) {
+    updateArchiveCardStatus: async function (cardId, data) {
         const response = await apiPut(`/api/boards/cards/archive/${cardId}`, data);
     },
     deleteCard: async function (cardId) {

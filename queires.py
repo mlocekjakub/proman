@@ -75,7 +75,7 @@ def delete_card(card_id):
         """, {"card_id": card_id})
 
 
-def archive_card(card_id, archived_status):
+def change_archive_card_status(card_id, archived_status):
     data_manager.execute_dml_statement(
         """
         UPDATE cards
@@ -84,11 +84,20 @@ def archive_card(card_id, archived_status):
         """, {"card_id": card_id, "archived_status": archived_status})
 
 
+def get_archived_cards(board_id):
+    return data_manager.execute_select(
+        """
+        SELECT *
+        FROM cards
+        WHERE board_id = %(board_id)s AND archived = TRUE;
+        """, {"board_id": board_id})
+
+
 def get_cards_for_board(board_id):
     return data_manager.execute_select(
         """
         SELECT * FROM cards
-        WHERE cards.board_id = %(board_id)s
+        WHERE cards.board_id = %(board_id)s AND cards.archived = FALSE
         ORDER BY cards.card_order;
         """, {"board_id": board_id})
 

@@ -1,45 +1,70 @@
 {% extends 'layout.html' %}
-    {% block title %}
-        Main Page
-    {% endblock %}
+{% block title %}
+    Main Page
+{% endblock %}
 {% block link %}
-        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon/favicon.ico') }}">
-        <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon/favicon-32x32.png') }}">
-        <link rel="icon" type="image/png" sizes="96x96" href="{{ url_for('static', filename='favicon/favicon-96x96.png') }}">
-        <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon/favicon-16x16.png') }}">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
-        <script type="module" src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon/favicon.ico') }}">
+    <link rel="icon" type="image/png" sizes="32x32"
+          href="{{ url_for('static', filename='favicon/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="96x96"
+          href="{{ url_for('static', filename='favicon/favicon-96x96.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16"
+          href="{{ url_for('static', filename='favicon/favicon-16x16.png') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+    <script type="module" src="{{ url_for('static', filename='js/main.js') }}" defer></script>
 {% endblock %}
 
 {% block content %}
-    <div class="modal fade" id="new-board-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Create New Board</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body" id="modal-body">
-          <form method="post" action ="/api/boards/" id="form-board" hidden>
-          <div class="form-group">
-            <label for="board-title" class="col-form-label">Title:</label>
-            <input type="text" class="form-control" id="board-title" placeholder="board name">
-            <input type="submit" value="create" id="boardCreate" class="btn btn-primary" style="background-color: #566DBA; border-color: #566DBA;margin-top:2vh">
-          </div>
-        </form>
-          <form method="post" action ="/api/boards/cards" id="form-card" hidden>
-          <div class="form-group">
-            <label for="card-title" class="col-form-label">Title:</label>
-            <input type="text" class="form-control" id="card-title" placeholder="card name">
-            <input type="submit" value="create" id="cardCreate" class="btn btn-primary" style="background-color: #566DBA; border-color: #566DBA;margin-top:2vh">
-          </div>
-        </form>
-      </div>
+    <div class="modal fade" id="new-board-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Create New Board</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="modal-body">
+                    <form method="post" action="/api/boards/" id="form-board" hidden>
+                        <div class="form-group">
+                            <label for="board-title" class="col-form-label">Title:</label>
+                            <input type="text" class="form-control" id="board-title" placeholder="board name">
+                            <input type="submit" value="create" id="boardCreate" class="btn btn-primary"
+                                   style="background-color: #566DBA; border-color: #566DBA;margin-top:2vh">
+                        </div>
+                    </form>
+                    <form method="post" action="/api/boards/cards" id="form-card" hidden>
+                        <div class="form-group">
+                            <label for="card-title" class="col-form-label">Title:</label>
+                            <input type="text" class="form-control" id="card-title" placeholder="card name">
+                            <input type="submit" value="create" id="cardCreate" class="btn btn-primary"
+                                   style="background-color: #566DBA; border-color: #566DBA;margin-top:2vh">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
+    <div class="modal fade" id="archived-cards-modal" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Archived Cards</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="archive-cards-container" id="archived-cards-container"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-dark btn-sm" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div id="root"></div>
 
