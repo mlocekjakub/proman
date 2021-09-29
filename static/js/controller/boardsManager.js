@@ -72,6 +72,9 @@ export let boardsManager = {
       const boardBuilder = htmlFactory(htmlTemplates.board);
       const content = boardBuilder(board);
       domManager.addChild("#root", content);
+      if (localStorage.getItem(board.id) === 'open') {
+          await cardsManager.loadCards(board.id)
+      }
       domManager.addEventListener(
         `#showContent[data-board-id="${board.id}"]`,
         "click",
@@ -149,11 +152,13 @@ function showHideButtonHandler(clickEvent) {
     const statusesToHide = document.querySelector(`#statuses-row-container[data-board-id="${boardId}"]`)
     const addCardButton = document.querySelector(`#add-card[data-board-id="${boardId}"]`)
     if (element.innerHTML === "<i class=\"bi bi-chevron-double-down\"></i> Show") {
-        cardsManager.loadCards(boardId);
         addCardButton.parentNode.hidden = false
+        cardsManager.loadCards(boardId);
+        localStorage.setItem(boardId, 'open')
         element.innerHTML = "<i class=\"bi bi-chevron-double-up\"></i> Hide"
     } else {
         addCardButton.parentNode.hidden = true
+        localStorage.setItem(boardId, 'close')
         contentToHide.hidden = true
         contentToHide.innerHTML = ""
         statusesToHide.innerHTML = ""
