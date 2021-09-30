@@ -28,13 +28,13 @@ def get_statuses_for_board(board_id):
         """, {"board_id": board_id})
 
 
-def add_new_board(board_title):
+def add_new_board(board_title, board_owner):
     return data_manager.execute_dml_statement(
         """
-        INSERT INTO boards(title)
-        VALUES (%(title)s)
+        INSERT INTO boards(title, owner)
+        VALUES (%(title)s, %(board_owner)s)
         RETURNING id;
-        """, {"title": board_title})
+        """, {"title": board_title, "board_owner": board_owner})
 
 
 def add_new_column(column_title, board_id):
@@ -69,11 +69,22 @@ def add_new_card(title, board_id, card_order, status_id):
         """, {"board_id": board_id, "title": title, "card_order": card_order, "status_id": status_id})
 
 
-def get_boards():
+def get_boards(board_owner):
     return data_manager.execute_select(
         """
         SELECT * FROM boards
+        WHERE boards.owner IS NULL 
+        OR boards.owner = %(board_owner)s
         ORDER BY id;
+        """, {"board_owner": board_owner})
+
+
+def public_boards():
+    return data_manager.execute_select(
+        """
+        SELECT *
+        FROM boards
+        WHERE boards.owner IS NULL
         """)
 
 

@@ -83,7 +83,6 @@ function cardBuilder(card) {
                 <i id="archiveCardButton" style="float:right;margin-right: 1vh" data-card-id="${card.id}" class="bi bi-archive" hidden></i>
             </div>`;
 }
-
 function columnBuilder(column, boardId) {
     document.querySelector(`#statuses-row-container[data-board-id='${boardId}']`).hidden = false
     document.querySelector(`#content-row-container[data-board-id='${boardId}']`).hidden = false
@@ -115,7 +114,7 @@ function navbarLoggedBuilder() {
           </a>
         </li>
       <li class="nav-item ml-3">
-              <a class="nav-link navbar-btn" id="register-header"></a>
+              <a class="nav-link navbar-btn" id="register-header">signed in as ${login}</a>
         </li>`
 }
 

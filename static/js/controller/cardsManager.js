@@ -189,6 +189,7 @@ function changeNameOfColumn(e) {
     })
     e.target.addEventListener("keypress", function (eve) {
         if (eve.key === 'Enter') {
+            localStorage.setItem("chang
             let title = eve.target.value
             dataHandler.changeColumnName(column_id, {'title': title}).then()
             isSave = true
