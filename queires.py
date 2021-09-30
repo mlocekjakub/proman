@@ -24,7 +24,7 @@ def get_statuses_for_board(board_id):
         SELECT id, title 
         FROM statuses
         WHERE board_id = %(board_id)s 
-        order by statuses.id ASC;
+        ORDER BY statuses.id;
         """, {"board_id": board_id})
 
 

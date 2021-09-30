@@ -68,15 +68,14 @@ export let cardsManager = {
         const cardId = clickEvent.target.dataset.cardId;
         let modalContent = document.getElementById("archived-cards-container");
         modalContent.removeChild(document.getElementById(`archived-card-${cardId}`));
-        dataHandler.deleteCard(cardId);
+        dataHandler.deleteCard(cardId).then();
 
     },
     restoreArchivedCard: function (clickEvent) {
         const cardId = clickEvent.target.dataset.cardId;
-        const cardsToRestore = document.getElementsByClassName('cards');
         const archived_status = false;
         let data = {"archived_status": archived_status};
-        dataHandler.updateArchiveCardStatus(cardId, data);
+        dataHandler.updateArchiveCardStatus(cardId, data).then();
     },
 };
 
@@ -102,14 +101,13 @@ function archiveCardButtonHandler(clickEvent) {
             card.remove();
             const archived_status = true;
             let data = {"archived_status": archived_status};
-            dataHandler.updateArchiveCardStatus(cardId, data);
+            dataHandler.updateArchiveCardStatus(cardId, data).then();
         }
     }
 }
 
 function handleDragStart(e) {
-    let node = e.currentTarget
-    cardsManager.dragItem = node
+    cardsManager.dragItem = e.currentTarget
     e.target.classList.add("dragged", "drag-feedback")
     deferredOriginChanges(this, "drag-feedback")
 }
@@ -127,7 +125,7 @@ function changeNameOfCard(e) {
     document.getElementById('change-title').addEventListener("keypress", function (eve) {
         if (eve.key === 'Enter') {
             let title = eve.target.value
-            dataHandler.changeCardName(card_id, {'title': title})
+            dataHandler.changeCardName(card_id, {'title': title}).then()
             isSave = true
             document.activeElement.blur()
         }
@@ -136,9 +134,10 @@ function changeNameOfCard(e) {
     document.getElementById('change-title').addEventListener("focusout", function (eve) {
         let title = eve.target.value
         if (!isSave) {
-            e.target.innerHTML = `${previousInput} <i id="deleteCardButton" data-card-id="${card_id}" class="bi bi-trash2" hidden></i>`
+            e.target.innerHTML = `${previousInput}<i id="archiveCardButton" style="float:right;margin-right: 1vh" data-card-id="${card_id}" class="bi bi-archive" hidden></i>
+`
         } else {
-            e.target.innerHTML = `${title} <i id="deleteCardButton" data-card-id="${card_id}" class="bi bi-trash2" hidden></i>`
+            e.target.innerHTML = `${title}<i id="archiveCardButton" style="float:right;margin-right: 1vh" data-card-id="${card_id}" class="bi bi-archive" hidden></i>`
         }
     })
 }
@@ -174,7 +173,7 @@ function changeNameOfColumn(e) {
     e.target.addEventListener("keypress", function (eve) {
         if (eve.key === 'Enter') {
             let title = eve.target.value
-            dataHandler.changeColumnName(column_id, {'title': title})
+            dataHandler.changeColumnName(column_id, {'title': title}).then()
             isSave = true
             document.activeElement.blur()
         }

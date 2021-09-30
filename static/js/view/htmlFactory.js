@@ -79,7 +79,7 @@ function boardBuilder(board) {
 function cardBuilder(card) {
     return `<div draggable="true" data-card-id="${card.id}" data-cardorder-id="${card.card_order}" class="cards border border-success rounded">
                 ${card.title}
-                <i id="archiveCardButton" style="float:right;" data-card-id="${card.id}" class="bi bi-archive" hidden></i>
+                <i id="archiveCardButton" style="float:right;margin-right: 1vh" data-card-id="${card.id}" class="bi bi-archive" hidden></i>
             </div>`;
 }
 

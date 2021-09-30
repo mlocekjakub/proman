@@ -6,32 +6,24 @@ export let dataHandler = {
     getBoards: async function () {
         return await apiGet("/api/boards");
     },
-    getBoard: async function (boardId) {
-        // the board is retrieved and then the callback function is called with the board
-    },
+
     getStatusesByBoardId: async function (boardId) {
         return await apiGet(`/api/statuses/${boardId}`);
     },
-    getStatus: async function (statusId) {
-        // the status is retrieved and then the callback function is called with the status
-    },
     getCardsByBoardId: async function (boardId) {
         return await apiGet(`/api/boards/${boardId}/cards/`);
-    },
-    getCard: async function (cardId) {
-        // the card is retrieved and then the callback function is called with the card
     },
     getArchivedCardsByBoard: async function (boardId) {
         return await apiGet(`/api/boards/${boardId}/archived-cards/`);
     },
     deleteBoard: async function (boardId) {
-        const response = await apiDelete(`/api/boards/${boardId}`);
+        await apiDelete(`/api/boards/${boardId}`);
     },
     updateArchiveCardStatus: async function (cardId, data) {
-        const response = await apiPut(`/api/boards/cards/archive/${cardId}`, data);
+        await apiPut(`/api/boards/cards/archive/${cardId}`, data);
     },
     deleteCard: async function (cardId) {
-        const response = await apiDelete(`/api/boards/cards/${cardId}`);
+        await apiDelete(`/api/boards/cards/${cardId}`);
     },
     createNewBoard: async function (e) {
         e.preventDefault()
@@ -194,7 +186,7 @@ export let dataHandler = {
         e.preventDefault()
 
         await apiGet(`/api/logout`)
-            .then((res) => {
+            .then(() => {
                 localStorage.removeItem('login')
                 document.getElementById("navbar-buttons").innerHTML = ""
                 dataHandler.reloadBoards()
@@ -202,16 +194,16 @@ export let dataHandler = {
         })
     },
     changeStatus: async function (cardId, data) {
-        const response = await apiPut(`/api/boards/cards/${cardId}`, data)
+        await apiPut(`/api/boards/cards/${cardId}`, data)
     },
     changeCardName: async function (cardId, data) {
-        const response = await apiPut(`/api/boards/cards/name/${cardId}`, data)
+        await apiPut(`/api/boards/cards/name/${cardId}`, data)
     },
     changeBoardName: async function (boardId, data) {
-        const response = await apiPut(`/api/boards/name/${boardId}`, data)
+        await apiPut(`/api/boards/name/${boardId}`, data)
     },
     changeColumnName: async function (columnId, data) {
-        const response = await apiPut(`/api/boards/columns/name/${columnId}`, data)
+        await apiPut(`/api/boards/columns/name/${columnId}`, data)
     }
 };
 
@@ -236,7 +228,7 @@ async function apiPost(url, data) {
 }
 
 async function apiDelete(url) {
-    let response = fetch(url, {
+    return fetch(url, {
         method: "DELETE"
     });
 }

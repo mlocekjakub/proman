@@ -43,7 +43,7 @@ def delete_board(board_id: int):
     queires.delete_board(board_id)
 
 
-@app.route("/api/boards/cards/archive/<int:card_id>", methods=["PUT"])  # todo change route for shorter
+@app.route("/api/boards/cards/archive/<int:card_id>", methods=["PUT"])
 @json_response
 def change_archive_card_status(card_id: int):
     archived_status = request.get_json()["archived_status"]
