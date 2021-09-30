@@ -66,6 +66,7 @@ export let boardsManager = {
         "click",
         logout
     );
+
     const boards = await dataHandler.getBoards();
     for (let board of boards) {
       const boardBuilder = htmlFactory(htmlTemplates.board);
@@ -87,18 +88,9 @@ export let boardsManager = {
           "click",
           openRegisterModal
       );
-      // domManager.addEventListener(
-      //     `#board-title[data-board-id="${board.id}"]`,
-      //     "click",
-      //     showHideButtonHandler
-      // );
       domManager.addEventListener(`#add-card[data-board-id="${board.id}"]`,
           "click",
           openNewCardModal
-      );
-      domManager.addEventListener(`#add-column[data-board-id="${board.id}"]`,
-          "click",
-          changeNameOfBoard
       );
       domManager.addEventListener(
           `#deleteBoardButton[data-board-id="${board.id}"]`,
@@ -135,6 +127,16 @@ export let boardsManager = {
           "dblclick",
           changeNameOfBoard
       )
+        domManager.addEventListener(
+          `#board-title[data-board-id="${board.id}"]`,
+          "dblclick",
+          changeNameOfBoard
+      )
+        domManager.addEventListener(
+            `#add-column[data-board-id="${board.id}"]`,
+            "click",
+            dataHandler.createNewColumn
+        );
     }
   },
 };
@@ -341,5 +343,5 @@ function changeNameOfBoard(e) {
             e.target.innerHTML = `${title}`
         }
     })
-}
 
+}

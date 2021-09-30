@@ -1,6 +1,7 @@
 import {boardsManager} from "../controller/boardsManager.js";
 
 
+
 export let dataHandler = {
     getBoards: async function () {
         return await apiGet("/api/boards");
@@ -102,8 +103,8 @@ export let dataHandler = {
         try {
             await apiPost(url, data)
                 .then(() => {
-                    console.log("yo")
                     dataHandler.reloadBoards()
+
                 });
         } catch (error) {
             console.log(error);

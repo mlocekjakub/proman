@@ -118,7 +118,7 @@ def create_new_column():
     queires.add_new_column(column_title, board_id)
 
 
-@app.route("/api/boards/columns/name/<column_id>", methods=["POST"])
+@app.route("/api/boards/columns/name/<column_id>", methods=["PUT"])
 @json_response
 def change_column_name(column_id):
     column_title = request.get_json()["title"]

@@ -35,6 +35,7 @@ function openedBoardContent(board) {
     <div class="col-md-auto margin_header mr-0"><button type="button" data-board-id="${board.id}" class="btn btn-outline-dark btn-sm" id="add-card">+ Add Card</button>
     </div>
     <div class="col-md-auto margin_header mr-0"><button type="button" data-board-id="${board.id}" class="btn btn-outline-dark btn-sm" id="archived-cards-button">Archived cards</button></div>
+    <div class="col-md-auto margin_header mr-0"><button type="button" data-board-id="${board.id}" class="btn btn-outline-dark btn-sm" id="add-column">+ Add Column</button></div>
       <div class="col-md-auto margin_header mr-0 p-0"><button type="button" class="btn btn-outline-dark btn-sm" id="showContent" data-board-id="${board.id}"><i class="bi bi-chevron-double-up"></i> Hide</button>
     </div>
     <div class="col-md-auto margin_header">
@@ -55,6 +56,7 @@ function closedBoardContent(board) {
     </div>
     <div class="col-md-auto margin_header mr-0" hidden><button type="button" data-board-id="${board.id}" class="btn btn-outline-dark btn-sm" id="add-card">+ Add Card</button></div>
     <div class="col-md-auto margin_header mr-0" hidden><button type="button" data-board-id="${board.id}" class="btn btn-outline-dark btn-sm" id="archived-cards-button">Archived cards</button></div>
+    <div class="col-md-auto margin_header mr-0" hidden><button type="button" data-board-id="${board.id}" class="btn btn-outline-dark btn-sm" id="add-column">+ Add Columns</button></div>
     <div class="col-md-auto margin_header mr-0 p-0"><button type="button" class="btn btn-outline-dark btn-sm" id="showContent" data-board-id="${board.id}"><i class="bi bi-chevron-double-down"></i> Show</button></div>
     <div class="col-md-auto margin_header">
     <i id="deleteBoardButton" data-board-id="${board.id}" class="bi bi-trash"></i>
@@ -86,11 +88,11 @@ function columnBuilder(column, boardId) {
     document.querySelector(`#content-row-container[data-board-id='${boardId}']`).hidden = false
     if(column.title) {
         return [`<div class="col border-right border-dark" style="background-color: #566DBA" data-column-id="${column.id}" data-board-id="${boardId}">
-     <div id="status-title">${column.title}</div>
+     <div id="status-title" data-column-id="${column.id}">${column.title}</div>
     </div>`, `<div class = "col rounded m-2 p-2 d-flex flex-column" data-column-id="${column.id}" id="content-columns-container" data-board-id="${boardId}"><div class="empty">&nbsp</div></div>`];
     }else{
         return [`<div class="col border-right border-dark" style="background-color: #566DBA" data-column-id="${column.id}" data-board-id="${boardId}">
-     <div id="status-title"><div><input id="change-title" name="title" value=""></div></div>
+     <div id="status-title" data-column-id="${column.id}"><div><input id="change-title" name="title" value="" autofocus></div></div>
     </div>`, `<div class = "col rounded m-2 p-2 d-flex flex-column" data-column-id="${column.id}" id="content-columns-container" data-board-id="${boardId}"><div class="empty">&nbsp</div></div>`];
     }
 }
