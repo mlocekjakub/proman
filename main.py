@@ -1,7 +1,6 @@
 import mimetypes
 from dotenv import load_dotenv
 from flask import Flask, render_template, url_for, session, request, jsonify
-
 import queires
 import util
 from util import json_response
@@ -20,7 +19,6 @@ def index():
 @app.route("/api/boards/<board_owner>")
 @json_response
 def get_boards(board_owner):
-    print(board_owner)
     return queires.get_boards(board_owner)
 
 
@@ -142,7 +140,6 @@ def main():
 @app.route("/api/public/boards")
 @json_response
 def get_public_boards():
-    print(queires.public_boards())
     return queires.public_boards()
 
 
