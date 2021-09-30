@@ -22,6 +22,10 @@ export let boardsManager = {
           "click",
           openNewBoardModal
     );
+    domManager.addEventListener("#refresh_page",
+       "click",
+        dataHandler.reloadBoards
+    );
     domManager.addEventListener("#form-board",
           "submit",
           dataHandler.createNewBoard
@@ -30,6 +34,14 @@ export let boardsManager = {
         "submit",
         dataHandler.createNewCard
     );
+    domManager.addEventListener(`#login-button`,
+          "click",
+          openLoginModal
+      );
+      domManager.addEventListener(`#register-button`,
+          "click",
+          openRegisterModal
+      );
     domManager.addEventListener("#login-form",
         "submit",
         dataHandler.loginUser
@@ -66,11 +78,19 @@ export let boardsManager = {
         "click",
         logout
     );
-    const boards = await dataHandler.getBoards();
+    let boards = await dataHandler.getPublicBoards();
+    if (localStorage.getItem('login')) {
+        let owner = localStorage.getItem('login')
+        boards = await dataHandler.getBoards(owner);
+    }
     for (let board of boards) {
       const boardBuilder = htmlFactory(htmlTemplates.board);
       const content = boardBuilder(board);
       domManager.addChild("#root", content);
+      if (board.owner !== null) {
+          let header = document.querySelector(`#header-Row[data-board-id="${board.id}"]`)
+          header.classList.add("private_board")
+      }
       if (localStorage.getItem(board.id) === 'open') {
           await cardsManager.loadCards(board.id)
       }
@@ -79,19 +99,6 @@ export let boardsManager = {
         "click",
         showHideButtonHandler
       );
-      domManager.addEventListener(`#login-button`,
-          "click",
-          openLoginModal
-      );
-      domManager.addEventListener(`#register-button`,
-          "click",
-          openRegisterModal
-      );
-      // domManager.addEventListener(
-      //     `#board-title[data-board-id="${board.id}"]`,
-      //     "click",
-      //     showHideButtonHandler
-      // );
       domManager.addEventListener(`#add-card[data-board-id="${board.id}"]`,
           "click",
           openNewCardModal
@@ -242,12 +249,17 @@ function openNewBoardModal() {
     let newBoardForm = document.getElementById("form-board")
     let modalTitle = document.getElementById("exampleModalLabel")
     let inputModal = document.getElementById("board-title")
+    let checkboxPrivate = document.getElementById('is-logged"')
     newBoardForm.hidden = false
     newCardForm.hidden = true
     modalTitle.style.color = "black"
     modalTitle.innerHTML = "Create new board"
     inputModal.classList.remove("not_valid")
     inputModal.value = ""
+    if (localStorage.getItem('login')) {
+        checkboxPrivate.innerHTML = `<input type="checkbox" value="isPrivate" id="private" name="private">
+                            <label for="private">private</label>`
+    }
     $(newBoardModal).modal();
 }
 

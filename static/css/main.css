@@ -20,6 +20,7 @@ body{
     margin-bottom: 4vh;
     margin-top: 4vh;
     overflow: scroll;
+
 }
 #content-row-container {
     height:70vh;
@@ -31,6 +32,7 @@ body{
     background: whitesmoke;
     border-radius: 5px;
 }
+
 .margin_header {
     margin-top: 2vh;
     margin-bottom: 2vh;
@@ -99,4 +101,10 @@ body{
 
 .dropdown-toggle::after {
     display: none;
+}
+.private_board {
+    background: #89b8e1 !important;
+}
+div.col.border-right.border-dark.column_header {
+    background-color: #566DBA;
 }

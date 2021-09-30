@@ -17,10 +17,11 @@ def index():
     return render_template('index.html')
 
 
-@app.route("/api/boards")
+@app.route("/api/boards/<board_owner>")
 @json_response
-def get_boards():
-    return queires.get_boards()
+def get_boards(board_owner):
+    print(board_owner)
+    return queires.get_boards(board_owner)
 
 
 @app.route("/api/boards/<int:board_id>/cards/")
@@ -80,8 +81,9 @@ def change_boards_name(board_id: int):
 @app.route("/api/boards/", methods=["POST"])
 @json_response
 def create_new_board():
-    board_title = request.get_json()
-    new_board_id = queires.add_new_board(board_title)
+    board_title = request.get_json()['title']
+    board_owner = request.get_json()['owner']
+    new_board_id = queires.add_new_board(board_title, board_owner)
     queires.add_new_column("new", new_board_id)
     queires.add_new_column("in progress", new_board_id)
     queires.add_new_column("testing", new_board_id)
@@ -125,6 +127,13 @@ def main():
     app.run(debug=True)
     with app.app_context():
         app.add_url_rule('/favicon.ico', redirect_to=url_for('static', filename='favicon/favicon.ico'))
+
+
+@app.route("/api/public/boards")
+@json_response
+def get_public_boards():
+    print(queires.public_boards())
+    return queires.public_boards()
 
 
 @app.route('/api/register/user', methods=['POST'])

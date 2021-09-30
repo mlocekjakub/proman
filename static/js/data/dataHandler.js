@@ -2,8 +2,11 @@ import {boardsManager} from "../controller/boardsManager.js";
 
 
 export let dataHandler = {
-    getBoards: async function () {
-        return await apiGet("/api/boards");
+    getBoards: async function (boardOwner) {
+        return await apiGet(`/api/boards/${boardOwner}`);
+    },
+    getPublicBoards: async function () {
+        return await apiGet("/api/public/boards")
     },
     getBoard: async function (boardId) {
         // the board is retrieved and then the callback function is called with the board
@@ -35,6 +38,11 @@ export let dataHandler = {
     createNewBoard: async function (e) {
         e.preventDefault()
         let title = document.getElementById("board-title")
+        let isPrivate = document.getElementById('private')
+        let owner = null
+        if (isPrivate.checked) {
+            owner = localStorage.getItem('login')
+        }
         let boardHeader = document.getElementById("exampleModalLabel")
         const form = e.currentTarget
         const url = form.action;
@@ -43,7 +51,8 @@ export let dataHandler = {
             return;
         }
         try {
-            await apiPost(url, title.value)
+            let data = {"title": title.value, "owner": owner}
+            await apiPost(url, data)
                 .then(() => {
                     document.getElementById("form-board").hidden = true
                     boardHeader.innerHTML = "successfully added board <i class=\"bi bi-check2-all\"></i>"
@@ -120,7 +129,6 @@ export let dataHandler = {
         let notValidInputInfo = document.getElementById("not_valid_info_login")
         let loginModal = document.getElementById("registerModal")
         let registerInfo = document.getElementById("register-info")
-        localStorage.setItem('login', email.value)
         notValidInputInfo.hidden = true
         if (!(email.value)) {
             email.classList.add("not_valid")
@@ -133,11 +141,11 @@ export let dataHandler = {
         try {
             await apiPost(url, formData)
                 .then((res) => {
+                    localStorage.setItem('login', res[1])
                     if (!res[0]) {
                         notValidInputInfo.hidden = false
                     }
                     else {
-                        console.log(res[1])
                         $(loginModal).modal('hide')
                         registerInfo.innerHTML = "Successfully logged in"
                         $(informationModal).modal()

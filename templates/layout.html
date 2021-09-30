@@ -25,32 +25,11 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="d-flex justify-content-end">
+        <a class="nav-link navbar-btn border border-secondary rounded" id='refresh_page' style="background-color: whitesmoke">
+      <i class="bi bi-arrow-repeat"></i>
+    </a>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav text-white" id="navbar-buttons">
-{#        <li class="nav-item ml-3">#}
-{#          <a class="nav-link navbar-btn border border-secondary rounded" id="create-board-button" style="background-color: whitesmoke">#}
-{#                New Board#}
-{#          </a>#}
-{#        </li>#}
-{#        <li class="nav-item ml-3">#}
-{#            {% if "user" in session %}#}
-{#          <a class="nav-link border border-secondary rounded" id="logout" href="/logout" style="background-color: whitesmoke">#}
-{#              log out#}
-{#          </a>#}
-{#            {% else %}#}
-{#            <a class="nav-link border border-secondary rounded" href="/login" id="login-button" style="background-color: whitesmoke">#}
-{#              login#}
-{#            </a>#}
-{#            {% endif %}#}
-{#        </li>#}
-{#      <li class="nav-item ml-3">#}
-{#          {% if "user" in session %}#}
-{#              <a class="nav-link navbar-btn" id="register-header">signed in as {{session['username']}}</a>#}
-{#          {% else %}#}
-{#              <a class="nav-link navbar-btn border-secondary rounded" href="/register" id="register-button" style="background-color: whitesmoke">#}
-{#              register</a>#}
-{#          {% endif %}#}
-{#        </li>#}
       </ul>
     </div>
   </div>
