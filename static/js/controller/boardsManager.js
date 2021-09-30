@@ -87,11 +87,11 @@ export let boardsManager = {
           "click",
           openRegisterModal
       );
-      domManager.addEventListener(
-          `#board-title[data-board-id="${board.id}"]`,
-          "click",
-          showHideButtonHandler
-      );
+      // domManager.addEventListener(
+      //     `#board-title[data-board-id="${board.id}"]`,
+      //     "click",
+      //     showHideButtonHandler
+      // );
       domManager.addEventListener(`#add-card[data-board-id="${board.id}"]`,
           "click",
           openNewCardModal
@@ -106,7 +106,12 @@ export let boardsManager = {
           deleteBoardButtonHandler
       );
       domManager.addEventListener(
-        `#content-row-container[data-board-id="${board.id}"]`,
+        `#archived-cards-button[data-board-id="${board.id}"]`,
+          "click",
+          openArchiveCardsModal
+      );
+      domManager.addEventListener(
+          `#content-row-container[data-board-id="${board.id}"]`,
         "drop",
         handleDrop
       );
@@ -125,6 +130,11 @@ export let boardsManager = {
         "dragleave",
         handleDragLeave
       );
+      domManager.addEventListener(
+          `#board-title[data-board-id="${board.id}"]`,
+          "dblclick",
+          changeNameOfBoard
+      )
     }
   },
 };
@@ -151,31 +161,31 @@ function openLoginModal(e) {
 
 function showHideButtonHandler(clickEvent) {
     const boardId = clickEvent.target.dataset.boardId;
-    const element = document.querySelector(`#showContent[data-board-id='${boardId}']`)
-    const contentToHide = document.querySelector(`#content-row-container[data-board-id="${boardId}"]`)
-    const statusesToHide = document.querySelector(`#statuses-row-container[data-board-id="${boardId}"]`)
-    const addCardButton = document.querySelector(`#add-card[data-board-id="${boardId}"]`)
-    const addColumnButton = document.querySelector(`#add-column[data-board-id="${boardId}"]`)
+    const element = document.querySelector(`#showContent[data-board-id='${boardId}']`);
+    const contentToHide = document.querySelector(`#content-row-container[data-board-id="${boardId}"]`);
+    const statusesToHide = document.querySelector(`#statuses-row-container[data-board-id="${boardId}"]`);
+    const addCardButton = document.querySelector(`#add-card[data-board-id="${boardId}"]`);
+    const archiveCardButton = document.querySelector(`#archived-cards-button[data-board-id="${boardId}"]`);
     if (element.innerHTML === "<i class=\"bi bi-chevron-double-down\"></i> Show") {
-        addCardButton.parentNode.hidden = false
-        addColumnButton.parentNode.hidden = false
         cardsManager.loadCards(boardId);
+        addCardButton.parentNode.hidden = false;
+        archiveCardButton.parentNode.hidden = false;
+        element.innerHTML = "<i class=\"bi bi-chevron-double-up\"></i> Hide";
         localStorage.setItem(boardId, 'open')
-        element.innerHTML = "<i class=\"bi bi-chevron-double-up\"></i> Hide"
     } else {
         addCardButton.parentNode.hidden = true
-        addColumnButton.parentNode.hidden = true
         localStorage.setItem(boardId, 'close')
         contentToHide.hidden = true
         contentToHide.innerHTML = ""
         statusesToHide.innerHTML = ""
         element.innerHTML = "<i class=\"bi bi-chevron-double-down\"></i> Show"
+        archiveCardButton.parentNode.hidden = true; //TODO if cards exists
     }
 }
 
 function deleteBoardButtonHandler(clickEvent) {
     const boardId = clickEvent.target.dataset.boardId;
-    const rowsToDelete = document.getElementsByClassName('row' && 'bg-light')
+    const rowsToDelete = document.getElementsByClassName('row' && 'bg-light');
     for (let row of rowsToDelete) {
         let rowId = row.getAttribute('data-board-id');
         if (rowId === boardId) {
@@ -260,6 +270,33 @@ function openNewCardModal(e) {
     inputModal.classList.remove("not_valid")
     inputModal.value = ""
     $(newCardModal).modal();
+}
+
+async function openArchiveCardsModal(e) {
+    let boardId = e.target.dataset.boardId;
+    let cardsContainer = document.getElementById("archived-cards-container");
+    while (cardsContainer.firstChild) {
+        cardsContainer.removeChild(cardsContainer.firstChild);
+    }
+    let archivedCardsModal = document.getElementById("archived-cards-modal");
+    let archivedCards = await dataHandler.getArchivedCardsByBoard(boardId);
+    for (let cardData of archivedCards) {
+        let card = `<div class="row">
+                        <div class="col cards border border-success rounded">${cardData.title}</div>
+                        <div class="col" style="justify-content: right">
+                            <button type="button" class="btn btn-outline-dark btn-sm" id="restore-button" data-card-id=${cardData.id}>Restore</button>
+                            <button type="button" class="btn btn-outline-dark btn-sm" id="delete-button" data-card-id=${cardData.id}>Delete</button>
+                        </div>
+                    </div>`;
+        domManager.addChild("#archived-cards-container", card)
+        domManager.addEventListener(`#restore-button[data-card-id="${cardData.id}"]`,
+            "click",
+            cardsManager.restoreArchivedCard)
+        domManager.addEventListener(`#delete-button[data-card-id="${cardData.id}"]`,
+            "click",
+            cardsManager.deleteCardButtonHandler)
+    }
+    $(archivedCardsModal).modal();
 }
 
 function removeNotValidStyle() {

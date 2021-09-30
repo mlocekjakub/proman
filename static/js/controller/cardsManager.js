@@ -17,7 +17,7 @@ export let cardsManager = {
         domManager.addEventListener(
             `#deleteCardButton[data-card-id="${card_id}"]`,
             "click",
-            deleteCardButtonHandler
+            cardsManager.deleteCardButtonHandler
         );
         domManager.addEventListener(
             `#archiveCardButton[data-card-id="${card_id}"]`,
@@ -64,6 +64,23 @@ export let cardsManager = {
             this.initEvents(card.id)
         }
     },
+    deleteCardButtonHandler: function (clickEvent) {
+        const cardId = clickEvent.target.dataset.cardId;
+        const cardsToDelete = document.getElementsByClassName('cards');
+        for (let card of cardsToDelete) {
+            if (cardId === card.getAttribute('data-card-id')) {
+                card.remove();
+                dataHandler.deleteCard(cardId);
+            }
+        }
+    },
+    restoreArchivedCard: function (clickEvent) {
+        const cardId = clickEvent.target.dataset.cardId;
+        const cardsToRestore = document.getElementsByClassName('cards');
+        const archived_status = false;
+        let data = {"archived_status": archived_status};
+        dataHandler.updateArchiveCardStatus(cardId, data);
+    },
 };
 
 function showButton(event) {
@@ -88,18 +105,7 @@ function archiveCardButtonHandler(clickEvent) {
             card.remove();
             const archived_status = true;
             let data = {"archived_status": archived_status};
-            dataHandler.archiveCard(cardId, data);
-        }
-    }
-}
-
-function deleteCardButtonHandler(clickEvent) {
-    const cardId = clickEvent.target.dataset.cardId;
-    const cardsToDelete = document.getElementsByClassName('cards');
-    for (let card of cardsToDelete) {
-        if (cardId === card.getAttribute('data-card-id')) {
-            card.remove();
-            dataHandler.deleteCard(cardId);
+            dataHandler.updateArchiveCardStatus(cardId, data);
         }
     }
 }
@@ -168,5 +174,3 @@ function deferredOriginChanges(origin, dragFeedbackClassName) {
         origin.classList.remove(dragFeedbackClassName);
     });
 }
-
-

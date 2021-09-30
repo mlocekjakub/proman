@@ -34,6 +34,7 @@ function openedBoardContent(board) {
     </div>
     <div class="col-md-auto margin_header mr-0"><button type="button" data-board-id="${board.id}" class="btn btn-outline-dark btn-sm" id="add-card">+ Add Card</button>
     </div>
+    <div class="col-md-auto margin_header mr-0"><button type="button" data-board-id="${board.id}" class="btn btn-outline-dark btn-sm" id="archived-cards-button">Archived cards</button></div>
       <div class="col-md-auto margin_header mr-0 p-0"><button type="button" class="btn btn-outline-dark btn-sm" id="showContent" data-board-id="${board.id}"><i class="bi bi-chevron-double-up"></i> Hide</button>
     </div>
     <div class="col-md-auto margin_header">
@@ -53,7 +54,7 @@ function closedBoardContent(board) {
       <div class="col h3 margin_header" id="board-title" data-board-id="${board.id}">${board.title}</i>
     </div>
     <div class="col-md-auto margin_header mr-0" hidden><button type="button" data-board-id="${board.id}" class="btn btn-outline-dark btn-sm" id="add-card">+ Add Card</button></div>
-    <div class="col-md-auto margin_header mr-0" hidden><button type="button" data-board-id="${board.id}" class="btn btn-outline-dark btn-sm" id="add-column">+ Add Column</button></div>  
+    <div class="col-md-auto margin_header mr-0" hidden><button type="button" data-board-id="${board.id}" class="btn btn-outline-dark btn-sm" id="archived-cards-button">Archived cards</button></div>
     <div class="col-md-auto margin_header mr-0 p-0"><button type="button" class="btn btn-outline-dark btn-sm" id="showContent" data-board-id="${board.id}"><i class="bi bi-chevron-double-down"></i> Show</button></div>
     <div class="col-md-auto margin_header">
     <i id="deleteBoardButton" data-board-id="${board.id}" class="bi bi-trash"></i>
