@@ -96,6 +96,10 @@ export let boardsManager = {
           "click",
           openNewCardModal
       );
+      domManager.addEventListener(`#add-column[data-board-id="${board.id}"]`,
+          "click",
+          changeNameOfBoard
+      );
       domManager.addEventListener(
           `#deleteBoardButton[data-board-id="${board.id}"]`,
           "click",
