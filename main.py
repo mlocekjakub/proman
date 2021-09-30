@@ -125,12 +125,6 @@ def get_statuses_for_board(board_id):
         return queires.get_statuses_for_board(board_id)
 
 
-def main():
-    app.run(debug=True)
-    with app.app_context():
-        app.add_url_rule('/favicon.ico', redirect_to=url_for('static', filename='favicon/favicon.ico'))
-
-
 @app.route('/api/register/user', methods=['POST'])
 @json_response
 def register():
@@ -177,7 +171,3 @@ def logout():
     session.pop("id", None)
     session.pop("user", None)
     return jsonify()
-
-
-if __name__ == '__main__':
-    main()
