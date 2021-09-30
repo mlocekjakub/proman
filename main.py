@@ -1,7 +1,6 @@
 import mimetypes
 from dotenv import load_dotenv
 from flask import Flask, render_template, url_for, session, request, jsonify
-
 import queires
 import util
 from util import json_response
@@ -132,6 +131,18 @@ def get_statuses_for_board(board_id):
         return queires.get_statuses_for_board(board_id)
 
 
+def main():
+    app.run(debug=True)
+    with app.app_context():
+        app.add_url_rule('/favicon.ico', redirect_to=url_for('static', filename='favicon/favicon.ico'))
+
+
+@app.route("/api/public/boards")
+@json_response
+def get_public_boards():
+    return queires.public_boards()
+
+
 @app.route('/api/register/user', methods=['POST'])
 @json_response
 def register():
@@ -180,11 +191,5 @@ def logout():
     return jsonify()
 
 
-def main():
-    app.run(debug=True)
-    with app.app_context():
-        app.add_url_rule('/favicon.ico', redirect_to=url_for('static', filename='favicon/favicon.ico'))
-
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
