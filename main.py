@@ -178,3 +178,13 @@ def logout():
     session.pop("id", None)
     session.pop("user", None)
     return jsonify()
+
+
+def main():
+    app.run(debug=True)
+    with app.app_context():
+        app.add_url_rule('/favicon.ico', redirect_to=url_for('static', filename='favicon/favicon.ico'))
+
+
+if __name__ == "__main__":
+    main()
