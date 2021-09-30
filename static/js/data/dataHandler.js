@@ -131,7 +131,7 @@ export let dataHandler = {
             return;
         }
         try {
-            await postData(url, formData)
+            await apiPost(url, formData)
                 .then((res) => {
                     if (!res[0]) {
                         notValidInputInfo.hidden = false
@@ -142,7 +142,7 @@ export let dataHandler = {
                         registerInfo.innerHTML = "Successfully logged in"
                         $(informationModal).modal()
                         notValidInputInfo.hidden = true
-                        // document.getElementById("navbar-buttons").innerHTML = ""
+                        document.getElementById("navbar-buttons").innerHTML = ""
                         dataHandler.reloadBoards()
                         document.getElementById("register-header").innerHTML = `signed in as ${res[1]}`
 
@@ -172,7 +172,7 @@ export let dataHandler = {
             return;
         }
         try {
-            await postData(url, formData)
+            await apiPost(url, formData)
                 .then((res) => {
                     if (res) {
                         $(registerModal).modal('hide');
@@ -195,7 +195,7 @@ export let dataHandler = {
         await apiGet(`/api/logout`)
             .then((res) => {
                 localStorage.removeItem('login')
-                // document.getElementById("navbar-buttons").innerHTML = ""
+                document.getElementById("navbar-buttons").innerHTML = ""
                 dataHandler.reloadBoards()
 
         })

@@ -87,11 +87,11 @@ export let boardsManager = {
           "click",
           openRegisterModal
       );
-      domManager.addEventListener(
-          `#board-title[data-board-id="${board.id}"]`,
-          "click",
-          showHideButtonHandler
-      );
+      // domManager.addEventListener(
+      //     `#board-title[data-board-id="${board.id}"]`,
+      //     "click",
+      //     showHideButtonHandler
+      // );
       domManager.addEventListener(`#add-card[data-board-id="${board.id}"]`,
           "click",
           openNewCardModal
@@ -103,11 +103,11 @@ export let boardsManager = {
       );
       domManager.addEventListener(
         `#archived-cards-button[data-board-id="${board.id}"]`,
-                "click",
-                openArchiveCardsModal
-            );
-            domManager.addEventListener(
-                `#content-row-container[data-board-id="${board.id}"]`,
+          "click",
+          openArchiveCardsModal
+      );
+      domManager.addEventListener(
+          `#content-row-container[data-board-id="${board.id}"]`,
         "drop",
         handleDrop
       );
@@ -126,6 +126,11 @@ export let boardsManager = {
         "dragleave",
         handleDragLeave
       );
+      domManager.addEventListener(
+          `#board-title[data-board-id="${board.id}"]`,
+          "dblclick",
+          changeNameOfBoard
+      )
     }
   },
 };
@@ -271,7 +276,6 @@ async function openArchiveCardsModal(e) {
     }
     let archivedCardsModal = document.getElementById("archived-cards-modal");
     let archivedCards = await dataHandler.getArchivedCardsByBoard(boardId);
-    console.log(archivedCards);
     for (let cardData of archivedCards) {
         let card = `<div class="row">
                         <div class="col cards border border-success rounded">${cardData.title}</div>
