@@ -277,7 +277,7 @@ async function openArchiveCardsModal(e) {
     let archivedCardsModal = document.getElementById("archived-cards-modal");
     let archivedCards = await dataHandler.getArchivedCardsByBoard(boardId);
     for (let cardData of archivedCards) {
-        let card = `<div style="margin-bottom: 2vh">
+        let card = `<div style="margin-bottom: 2vh" id="archived-card-${cardData.id}">
                         <div class="row">
                         <div class="col cards border border-success rounded" style="margin-left: 1vh; margin-right: 1vh;">${cardData.title}</div>
                         </div>
