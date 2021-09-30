@@ -15,11 +15,6 @@ export let cardsManager = {
             handleDragEnd
         );
         domManager.addEventListener(
-            `#deleteCardButton[data-card-id="${card_id}"]`,
-            "click",
-            cardsManager.deleteCardButtonHandler
-        );
-        domManager.addEventListener(
             `#archiveCardButton[data-card-id="${card_id}"]`,
             "click",
             archiveCardButtonHandler
@@ -39,11 +34,8 @@ export let cardsManager = {
             "dblclick",
             changeNameOfCard
         );
-        domManager.addEventListener(
-            `#change-title`,
-            "focusin",
-            changeNameOfColumn
-        );
+
+
     },
     dragItem: null,
     loadCards: async function (boardId) {
@@ -55,31 +47,48 @@ export let cardsManager = {
             const contentContainer = columnBuilder(column, boardId)[1]
             domManager.addChild(`#content-row-container[data-board-id="${boardId}"]`, contentContainer)
             domManager.addChild(`#statuses-row-container[data-board-id="${boardId}"]`, content);
+            domManager.addEventListener(
+                "#change-title",
+                "focusin",
+                changeNameOfColumn
+            );
+            domManager.addEventListener(
+                `#status-title[data-column-id="${column.id}"]`,
+                "dblclick",
+                createChangeTitle
+            );
+            domManager.addEventListener(
+                `#deleteColumnButton[data-column-id="${column.id}"]`,
+                "click",
+                deleteColumn
+            );
         }
         for (let card of cards) {
             const cardBuilder = htmlFactory(htmlTemplates.card);
             const content = cardBuilder(card);
             domManager.addChild(`#content-columns-container[data-column-id="${card.status_id}"][data-board-id="${card.board_id}"]`, content);
-
             this.initEvents(card.id)
         }
     },
     deleteCardButtonHandler: function (clickEvent) {
         const cardId = clickEvent.target.dataset.cardId;
-        const cardsToDelete = document.getElementsByClassName('cards');
-        for (let card of cardsToDelete) {
-            if (cardId === card.getAttribute('data-card-id')) {
-                card.remove();
-                dataHandler.deleteCard(cardId);
-            }
-        }
+        let modalContent = document.getElementById("archived-cards-container");
+        modalContent.removeChild(document.getElementById(`archived-card-${cardId}`));
+        dataHandler.deleteCard(cardId).then();
+
     },
-    restoreArchivedCard: function (clickEvent) {
+    restoreArchivedCard: async function (clickEvent) {
         const cardId = clickEvent.target.dataset.cardId;
-        const cardsToRestore = document.getElementsByClassName('cards');
+        const card = await dataHandler.getCard(cardId)
         const archived_status = false;
+        let modalContent = document.getElementById("archived-cards-container");
         let data = {"archived_status": archived_status};
-        dataHandler.updateArchiveCardStatus(cardId, data);
+        modalContent.removeChild(document.getElementById(`archived-card-${cardId}`));
+        await dataHandler.updateArchiveCardStatus(cardId, data).then();
+        const cardBuilder = htmlFactory(htmlTemplates.card);
+        const content = cardBuilder(card[0]);
+        domManager.addChild(`#content-columns-container[data-column-id="${card[0].status_id}"][data-board-id="${card[0].board_id}"]`, content);
+        cardsManager.initEvents(cardId);
     },
 };
 
@@ -105,14 +114,13 @@ function archiveCardButtonHandler(clickEvent) {
             card.remove();
             const archived_status = true;
             let data = {"archived_status": archived_status};
-            dataHandler.updateArchiveCardStatus(cardId, data);
+            dataHandler.updateArchiveCardStatus(cardId, data).then();
         }
     }
 }
 
 function handleDragStart(e) {
-    let node = e.currentTarget
-    cardsManager.dragItem = node
+    cardsManager.dragItem = e.currentTarget
     e.target.classList.add("dragged", "drag-feedback")
     deferredOriginChanges(this, "drag-feedback")
 }
@@ -127,50 +135,69 @@ function changeNameOfCard(e) {
     let previousInput = e.target.innerText
     let isSave = false
     e.target.innerHTML = `<div><input id="change-title" name="title" value="${previousInput}"></div>`
+    document.getElementById('change-title').addEventListener("keypress", function (eve) {
+        if (eve.key === 'Enter') {
+            let title = eve.target.value
+            dataHandler.changeCardName(card_id, {'title': title}).then()
+            isSave = true
+            document.activeElement.blur()
+        }
+    })
 
-    document.getElementById('change-title').addEventListener("keypress", function (eve) {
-        if (eve.key === 'Enter') {
-            let title = eve.target.value
-            dataHandler.changeCardName(card_id, {'title': title})
-            isSave = true
-            document.activeElement.blur()
-        }
-    })
     document.getElementById('change-title').addEventListener("focusout", function (eve) {
         let title = eve.target.value
         if (!isSave) {
-            e.target.innerHTML = `${previousInput} <i id="deleteCardButton" data-card-id="${card_id}" class="bi bi-trash2" hidden></i>`
+            e.target.innerHTML = `${previousInput}<i id="archiveCardButton" style="float:right;margin-right: 1vh" data-card-id="${card_id}" class="bi bi-archive" hidden></i>
+`
         } else {
-            e.target.innerHTML = `${title} <i id="deleteCardButton" data-card-id="${card_id}" class="bi bi-trash2" hidden></i>`
+            e.target.innerHTML = `${title}<i id="archiveCardButton" style="float:right;margin-right: 1vh" data-card-id="${card_id}" class="bi bi-archive" hidden></i>`
         }
     })
 }
-function changeNameOfColumn(e) {
-    console.dir(e.target)
-    let column_id = e.target.parentNode.parentNode.getAttribute("data-column-id")
-    let previousInput = e.target.innerText
-    let isSave = false
-    e.target.innerHTML = `<div><input id="change-title" name="title" value="${previousInput}"></div>`
-    document.getElementById('change-title').addEventListener("keypress", function (eve) {
-        if (eve.key === 'Enter') {
-            let title = eve.target.value
-            dataHandler.changeColumnName(column_id, {'title': title})
-            isSave = true
-            document.activeElement.blur()
-        }
-    })
-    document.getElementById('change-title').addEventListener("focusout", function (eve) {
-        let title = eve.target.value
-        if (!isSave) {
-            e.target.innerHTML = `${previousInput} <i id="deleteCardButton" data-card-id="${column_id}" class="bi bi-trash2" hidden></i>`
-        } else {
-            e.target.innerHTML = `${title} <i id="deleteCardButton" data-card-id="${column_id}" class="bi bi-trash2" hidden></i>`
-        }
-    })
-}
+
 
 function deferredOriginChanges(origin, dragFeedbackClassName) {
     setTimeout(() => {
         origin.classList.remove(dragFeedbackClassName);
     });
+}
+
+function createChangeTitle(e) {
+    let previousInput = e.target.innerText
+    e.target.innerHTML = `<div><input id="change-title" name="title" value="${previousInput}"></div>`
+    domManager.addEventListener(
+        "#change-title",
+        "focusin",
+        changeNameOfColumn);
+}
+
+function changeNameOfColumn(e) {
+    let column_id = e.target.parentNode.parentNode.parentNode.getAttribute("data-column-id")
+    let previousInput = e.target.value
+    let isSave = false
+    e.target.addEventListener("focusout", function (eve) {
+        let title = eve.target.value
+        if (!title) {
+            eve.target.style += "background:red"
+        } else {
+            if (isSave) {
+                e.target.outerHTML = `${title}`
+            }else if (previousInput && isSave) {
+                e.target.outerHTML = `${previousInput}`
+            }
+        }
+    })
+    e.target.addEventListener("keypress", function (eve) {
+        if (eve.key === 'Enter') {
+            let title = eve.target.value
+            dataHandler.changeColumnName(column_id, {'title': title}).then()
+            isSave = true
+            document.activeElement.blur()
+        }
+    })
+}
+
+function deleteColumn(e) {
+    let status_id = e.target.getAttribute("data-column-id")
+    dataHandler.deleteColumns(status_id).then()
 }

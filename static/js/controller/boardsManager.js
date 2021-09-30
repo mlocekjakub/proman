@@ -129,6 +129,16 @@ export let boardsManager = {
         handleDragEnter
       );
       domManager.addEventListener(
+         `#board-title[data-board-id="${board.id}"]`,
+                "dblclick",
+                changeNameOfBoard
+            );
+       domManager.addEventListener(
+                `#add-column[data-board-id="${board.id}"]`,
+                "click",
+                dataHandler.createNewColumn
+            );
+      domManager.addEventListener(
         `#content-row-container[data-board-id="${board.id}"]`,
         "dragleave",
         handleDragLeave
@@ -169,20 +179,23 @@ function showHideButtonHandler(clickEvent) {
     const statusesToHide = document.querySelector(`#statuses-row-container[data-board-id="${boardId}"]`);
     const addCardButton = document.querySelector(`#add-card[data-board-id="${boardId}"]`);
     const archiveCardButton = document.querySelector(`#archived-cards-button[data-board-id="${boardId}"]`);
+    const addColumnButton = document.querySelector(`#add-column[data-board-id="${boardId}"]`);
     if (element.innerHTML === "<i class=\"bi bi-chevron-double-down\"></i> Show") {
-        cardsManager.loadCards(boardId);
+        localStorage.setItem(boardId, 'open')
+        cardsManager.loadCards(boardId).then();
         addCardButton.parentNode.hidden = false;
         archiveCardButton.parentNode.hidden = false;
+        addColumnButton.hidden = false
         element.innerHTML = "<i class=\"bi bi-chevron-double-up\"></i> Hide";
-        localStorage.setItem(boardId, 'open')
     } else {
-        addCardButton.parentNode.hidden = true
         localStorage.setItem(boardId, 'close')
+        addCardButton.parentNode.hidden = true
         contentToHide.hidden = true
+        addColumnButton.hidden = true
+        archiveCardButton.parentNode.hidden = true;
         contentToHide.innerHTML = ""
         statusesToHide.innerHTML = ""
         element.innerHTML = "<i class=\"bi bi-chevron-double-down\"></i> Show"
-        archiveCardButton.parentNode.hidden = true; //TODO if cards exists
     }
 }
 
@@ -193,7 +206,7 @@ function deleteBoardButtonHandler(clickEvent) {
         let rowId = row.getAttribute('data-board-id');
         if (rowId === boardId) {
             row.parentElement.remove();
-            dataHandler.deleteBoard(boardId);
+            dataHandler.deleteBoard(boardId).then();
         }
     }
 }
@@ -236,8 +249,7 @@ function handleDrop(e) {
     }
     let card_id = cardsManager.dragItem.getAttribute("data-card-id");
     let data = {"status_id": status_id, "card_order": card_order, "board_id": board_id}
-    dataHandler.changeStatus(card_id, data).then(r => {
-    });
+    dataHandler.changeStatus(card_id, data).then();
     div.remove();
     cardsManager.dragItem = null;
 }
@@ -289,7 +301,7 @@ async function openArchiveCardsModal(e) {
     let archivedCardsModal = document.getElementById("archived-cards-modal");
     let archivedCards = await dataHandler.getArchivedCardsByBoard(boardId);
     for (let cardData of archivedCards) {
-        let card = `<div style="margin-bottom: 2vh">
+        let card = `<div style="margin-bottom: 2vh" id="archived-card-${cardData.id}">
                         <div class="row">
                         <div class="col cards border border-success rounded" style="margin-left: 1vh; margin-right: 1vh;">${cardData.title}</div>
                         </div>
@@ -329,7 +341,7 @@ function removeNotValidStyle() {
 
 function logout(e) {
     e.preventDefault()
-    dataHandler.logout(e)
+    dataHandler.logout(e).then()
 }
 
 function changeNameOfBoard(e) {
@@ -341,7 +353,7 @@ function changeNameOfBoard(e) {
     document.getElementById('change-title').addEventListener("keypress", function (eve) {
         if (eve.key === 'Enter') {
             let title = eve.target.value
-            dataHandler.changeBoardName(card_id, {'title': title})
+            dataHandler.changeBoardName(card_id, {'title': title}).then()
             isSave = true
             document.activeElement.blur()
         }
@@ -355,4 +367,3 @@ function changeNameOfBoard(e) {
         }
     })
 }
-

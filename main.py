@@ -30,6 +30,12 @@ def get_cards_for_board(board_id: int):
     return queires.get_cards_for_board(board_id)
 
 
+@app.route("/api/card/<int:card_id>")
+@json_response
+def get_card(card_id: int):
+    return queires.get_card(card_id)
+
+
 @app.route("/api/boards/<int:board_id>/archived-cards/")
 @json_response
 def get_archived_cards_by_board(board_id: int):
@@ -44,7 +50,7 @@ def delete_board(board_id: int):
     queires.delete_board(board_id)
 
 
-@app.route("/api/boards/cards/archive/<int:card_id>", methods=["PUT"])  # todo change route for shorter
+@app.route("/api/boards/cards/archive/<int:card_id>", methods=["PUT"])
 @json_response
 def change_archive_card_status(card_id: int):
     archived_status = request.get_json()["archived_status"]
@@ -110,17 +116,21 @@ def create_new_column():
     queires.add_new_column(column_title, board_id)
 
 
-@app.route("/api/boards/columns/name/<column_id>", methods=["POST"])
+@app.route("/api/boards/columns/name/<column_id>", methods=["PUT"])
 @json_response
 def change_column_name(column_id):
     column_title = request.get_json()["title"]
     queires.change_column_name(column_title, column_id)
 
 
-@app.route("/api/statuses/<board_id>")
+@app.route("/api/statuses/<board_id>", methods=["GET", "DELETE"])
 @json_response
 def get_statuses_for_board(board_id):
-    return queires.get_statuses_for_board(board_id)
+    if request.method == "DELETE":
+        queires.delete_card_by_status(board_id)
+        queires.delete_status(board_id)
+    else:
+        return queires.get_statuses_for_board(board_id)
 
 
 def main():
