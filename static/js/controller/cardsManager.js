@@ -50,12 +50,18 @@ export let cardsManager = {
             domManager.addEventListener(
                 "#change-title",
                 "focusin",
-                changeNameOfColumn);
+                changeNameOfColumn
+            );
             domManager.addEventListener(
-            `#status-title[data-column-id="${column.id}"]`,
-            "dblclick",
-            createChangeTitle
-        );
+                `#status-title[data-column-id="${column.id}"]`,
+                "dblclick",
+                createChangeTitle
+            );
+            domManager.addEventListener(
+                `#deleteColumnButton[data-column-id="${column.id}"]`,
+                "click",
+                deleteColumn
+            );
         }
         for (let card of cards) {
             const cardBuilder = htmlFactory(htmlTemplates.card);
@@ -143,19 +149,19 @@ function changeNameOfCard(e) {
 }
 
 
-
 function deferredOriginChanges(origin, dragFeedbackClassName) {
     setTimeout(() => {
         origin.classList.remove(dragFeedbackClassName);
     });
 }
-function createChangeTitle(e){
+
+function createChangeTitle(e) {
     let previousInput = e.target.innerText
     e.target.innerHTML = `<div><input id="change-title" name="title" value="${previousInput}"></div>`
     domManager.addEventListener(
-                "#change-title",
-                "focusin",
-                changeNameOfColumn);
+        "#change-title",
+        "focusin",
+        changeNameOfColumn);
 }
 
 function changeNameOfColumn(e) {
@@ -164,10 +170,14 @@ function changeNameOfColumn(e) {
     let isSave = false
     e.target.addEventListener("focusout", function (eve) {
         let title = eve.target.value
-        if (!isSave) {
-            e.target.outerHTML = `${previousInput}`
+        if (!title) {
+            eve.target.style += "background:red"
         } else {
-            e.target.outerHTML = `${title}`
+            if (isSave) {
+                e.target.outerHTML = `${title}`
+            }else if (previousInput && isSave) {
+                e.target.outerHTML = `${previousInput}`
+            }
         }
     })
     e.target.addEventListener("keypress", function (eve) {
@@ -178,6 +188,9 @@ function changeNameOfColumn(e) {
             document.activeElement.blur()
         }
     })
+}
 
-
+function deleteColumn(e) {
+    let status_id = e.target.getAttribute("data-column-id")
+    dataHandler.deleteColumns(status_id).then()
 }

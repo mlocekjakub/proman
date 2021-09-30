@@ -92,14 +92,17 @@ export let dataHandler = {
         let boardId = board.getAttribute("data-board-id")
         const url = "/api/boards/columns";
         let data = {"boardId": boardId}
-        try {
-            await apiPost(url, data)
-                .then(() => {
-                    dataHandler.reloadBoards()
+        if(localStorage.getItem("change-title")==="False") {
+            try {
+                await apiPost(url, data)
+                    .then(() => {
+                        localStorage.setItem("change-title", "True")
+                        dataHandler.reloadBoards()
 
-                });
-        } catch (error) {
-            console.log(error);
+                    });
+            } catch (error) {
+                console.log(error);
+            }
         }
     },
 
@@ -204,6 +207,11 @@ export let dataHandler = {
     },
     changeColumnName: async function (columnId, data) {
         await apiPut(`/api/boards/columns/name/${columnId}`, data)
+    },
+    deleteColumns: async function (columnId) {
+        await apiDelete(`/api/statuses/${columnId}`).then(()=>{
+            dataHandler.reloadBoards()
+        })
     }
 };
 

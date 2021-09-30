@@ -115,10 +115,14 @@ def change_column_name(column_id):
     queires.change_column_name(column_title, column_id)
 
 
-@app.route("/api/statuses/<board_id>")
+@app.route("/api/statuses/<board_id>", methods=["GET", "DELETE"])
 @json_response
 def get_statuses_for_board(board_id):
-    return queires.get_statuses_for_board(board_id)
+    if request.method == "DELETE":
+        queires.delete_card_by_status(board_id)
+        queires.delete_status(board_id)
+    else:
+        return queires.get_statuses_for_board(board_id)
 
 
 def main():

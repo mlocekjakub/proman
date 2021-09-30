@@ -1,4 +1,3 @@
-
 export const htmlTemplates = {
     board: 1,
     card: 2,
@@ -27,6 +26,7 @@ export function htmlFactory(template) {
             }
     }
 }
+
 function openedBoardContent(board) {
     return ` <div class="container">
   <div class="row bg-light" id="header-Row" data-board-id="${board.id}">
@@ -68,14 +68,15 @@ function closedBoardContent(board) {
 </div>
   </div>`;
 }
+
 function boardBuilder(board) {
     if (localStorage.getItem(board.id) === 'open') {
         return openedBoardContent(board)
-    }
-    else {
+    } else {
         return closedBoardContent(board)
     }
 }
+
 function cardBuilder(card) {
     return `<div draggable="true" data-card-id="${card.id}" data-cardorder-id="${card.card_order}" class="cards border border-success rounded">
                 ${card.title}
@@ -86,12 +87,16 @@ function cardBuilder(card) {
 function columnBuilder(column, boardId) {
     document.querySelector(`#statuses-row-container[data-board-id='${boardId}']`).hidden = false
     document.querySelector(`#content-row-container[data-board-id='${boardId}']`).hidden = false
-    if(column.title) {
+    if (column.title) {
+        localStorage.setItem("change-title", "False")
         return [`<div class="col border-right border-dark" style="background-color: #566DBA" data-column-id="${column.id}" data-board-id="${boardId}">
+     <i id="deleteColumnButton" style="float:right;margin-right: -1.2vh;" class="bi bi-x-circle" data-column-id=${column.id}></i>
      <div id="status-title" data-column-id="${column.id}">${column.title}</div>
     </div>`, `<div class = "col rounded m-2 p-2 d-flex flex-column" data-column-id="${column.id}" id="content-columns-container" data-board-id="${boardId}"><div class="empty">&nbsp</div></div>`];
-    }else{
+    } else {
+        localStorage.setItem("change-title", "True")
         return [`<div class="col border-right border-dark" style="background-color: #566DBA" data-column-id="${column.id}" data-board-id="${boardId}">
+     <i id="deleteColumnButton" style="float:right;margin-right: -1.2vh;" class="bi bi-x-circle" data-column-id=${column.id}></i>
      <div id="status-title" data-column-id="${column.id}"><div><input id="change-title" name="title" value="" autofocus></div></div>
     </div>`, `<div class = "col rounded m-2 p-2 d-flex flex-column" data-column-id="${column.id}" id="content-columns-container" data-board-id="${boardId}"><div class="empty">&nbsp</div></div>`];
     }

@@ -8,14 +8,11 @@ export let boardsManager = {
 
     loadBoards: async function () {
         document.getElementById("navbar-buttons").innerHTML = ""
-        let navbarContent
+        let navbarBuilder = htmlFactory(htmlTemplates.logoutNavbar)
         if (localStorage.getItem('login')) {
-            const navbarBuilder = htmlFactory(htmlTemplates.loggedNavbar)
-            navbarContent = navbarBuilder()
-        } else {
-            const navbarBuilder = htmlFactory(htmlTemplates.logoutNavbar)
-            navbarContent = navbarBuilder()
+            navbarBuilder = htmlFactory(htmlTemplates.loggedNavbar)
         }
+        let navbarContent = navbarBuilder()
         domManager.addChild("#navbar-buttons", navbarContent)
         domManager.addEventListener(`#create-board-button`,
             "click",
@@ -349,5 +346,4 @@ function changeNameOfBoard(e) {
             e.target.innerHTML = `${title}`
         }
     })
-
 }
