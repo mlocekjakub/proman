@@ -24,7 +24,7 @@ def get_statuses_for_board(board_id):
         SELECT id, title 
         FROM statuses
         WHERE board_id = %(board_id)s 
-        order by statuses.id ASC;
+        ORDER BY statuses.id;
         """, {"board_id": board_id})
 
 
@@ -101,12 +101,28 @@ def delete_status_by_board(board_id):
         """, {"board_id": board_id})
 
 
+def delete_status(status_id):
+    data_manager.execute_dml_statement(
+        """
+        DELETE FROM statuses
+        WHERE id = %(status_id)s;
+        """, {"status_id": status_id})
+
+
 def delete_card(card_id):
     data_manager.execute_dml_statement(
         """
         DELETE FROM cards
         WHERE id = %(card_id)s;
         """, {"card_id": card_id})
+
+
+def delete_card_by_status(status_id):
+    data_manager.execute_dml_statement(
+        """
+        DELETE FROM cards
+        WHERE status_id = %(status_id)s;
+        """, {"status_id": status_id})
 
 
 def change_archive_card_status(card_id, archived_status):
