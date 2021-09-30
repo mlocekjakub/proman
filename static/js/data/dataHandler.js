@@ -1,7 +1,6 @@
 import {boardsManager} from "../controller/boardsManager.js";
 
 
-
 export let dataHandler = {
     getBoards: async function () {
         return await apiGet("/api/boards");
@@ -12,6 +11,9 @@ export let dataHandler = {
     },
     getCardsByBoardId: async function (boardId) {
         return await apiGet(`/api/boards/${boardId}/cards/`);
+    },
+    getCard: async function (cardId) {
+        return await apiGet(`/api/card/${cardId}`)
     },
     getArchivedCardsByBoard: async function (boardId) {
         return await apiGet(`/api/boards/${boardId}/archived-cards/`);

@@ -77,11 +77,18 @@ export let cardsManager = {
         dataHandler.deleteCard(cardId).then();
 
     },
-    restoreArchivedCard: function (clickEvent) {
+    restoreArchivedCard: async function (clickEvent) {
         const cardId = clickEvent.target.dataset.cardId;
+        const card = await dataHandler.getCard(cardId)
         const archived_status = false;
+        let modalContent = document.getElementById("archived-cards-container");
         let data = {"archived_status": archived_status};
-        dataHandler.updateArchiveCardStatus(cardId, data).then();
+        modalContent.removeChild(document.getElementById(`archived-card-${cardId}`));
+        await dataHandler.updateArchiveCardStatus(cardId, data).then();
+        const cardBuilder = htmlFactory(htmlTemplates.card);
+        const content = cardBuilder(card[0]);
+        domManager.addChild(`#content-columns-container[data-column-id="${card[0].status_id}"][data-board-id="${card[0].board_id}"]`, content);
+        cardsManager.initEvents(cardId);
     },
 };
 
