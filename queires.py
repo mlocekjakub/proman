@@ -136,6 +136,14 @@ def get_cards_for_board(board_id):
         """, {"board_id": board_id})
 
 
+def get_card(card_id):
+    return data_manager.execute_select(
+        """
+        SELECT * FROM cards
+        WHERE cards.id = %(card_id)s
+        """, {"card_id": card_id})
+
+
 def check_if_user_in_database(email):
     return data_manager.execute_select(
         """ 

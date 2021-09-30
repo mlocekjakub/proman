@@ -52,6 +52,7 @@ export let cardsManager = {
             domManager.addChild(`#statuses-row-container[data-board-id="${boardId}"]`, content);
         }
         for (let card of cards) {
+            console.log(card);
             const cardBuilder = htmlFactory(htmlTemplates.card);
             const content = cardBuilder(card);
             domManager.addChild(`#content-columns-container[data-column-id="${card.status_id}"][data-board-id="${card.board_id}"]`, content);
@@ -66,12 +67,18 @@ export let cardsManager = {
         dataHandler.deleteCard(cardId);
 
     },
-    restoreArchivedCard: function (clickEvent) {
+    restoreArchivedCard: async function (clickEvent) {
         const cardId = clickEvent.target.dataset.cardId;
-        const cardsToRestore = document.getElementsByClassName('cards');
+        const card = await dataHandler.getCard(cardId)
         const archived_status = false;
+        let modalContent = document.getElementById("archived-cards-container");
         let data = {"archived_status": archived_status};
-        dataHandler.updateArchiveCardStatus(cardId, data);
+        modalContent.removeChild(document.getElementById(`archived-card-${cardId}`));
+        await dataHandler.updateArchiveCardStatus(cardId, data);
+        const cardBuilder = htmlFactory(htmlTemplates.card);
+        const content = cardBuilder(card[0]);
+        domManager.addChild(`#content-columns-container[data-column-id="${card[0].status_id}"][data-board-id="${card[0].board_id}"]`, content);
+        cardsManager.initEvents(cardId);
     },
 };
 

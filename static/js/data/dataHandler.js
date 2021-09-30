@@ -18,7 +18,7 @@ export let dataHandler = {
         return await apiGet(`/api/boards/${boardId}/cards/`);
     },
     getCard: async function (cardId) {
-        // the card is retrieved and then the callback function is called with the card
+        return await apiGet(`/api/card/${cardId}`)
     },
     getArchivedCardsByBoard: async function (boardId) {
         return await apiGet(`/api/boards/${boardId}/archived-cards/`);

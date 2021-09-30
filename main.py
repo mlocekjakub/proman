@@ -29,6 +29,12 @@ def get_cards_for_board(board_id: int):
     return queires.get_cards_for_board(board_id)
 
 
+@app.route("/api/card/<int:card_id>")
+@json_response
+def get_card(card_id: int):
+    return queires.get_card(card_id)
+
+
 @app.route("/api/boards/<int:board_id>/archived-cards/")
 @json_response
 def get_archived_cards_by_board(board_id: int):
