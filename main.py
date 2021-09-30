@@ -14,28 +14,18 @@ app.secret_key = "GoodAfternoonVietnam"
 
 @app.route("/")
 def index():
-    """
-    This is a one-pager which shows all the boards and cards
-    """
     return render_template('index.html')
 
 
 @app.route("/api/boards")
 @json_response
 def get_boards():
-    """
-    All the boards
-    """
     return queires.get_boards()
 
 
 @app.route("/api/boards/<int:board_id>/cards/")
 @json_response
 def get_cards_for_board(board_id: int):
-    """
-    All cards that belongs to a board
-    :param board_id: id of the parent board
-    """
     return queires.get_cards_for_board(board_id)
 
 

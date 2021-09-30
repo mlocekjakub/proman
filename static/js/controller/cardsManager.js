@@ -66,13 +66,10 @@ export let cardsManager = {
     },
     deleteCardButtonHandler: function (clickEvent) {
         const cardId = clickEvent.target.dataset.cardId;
-        const cardsToDelete = document.getElementsByClassName('cards');
-        for (let card of cardsToDelete) {
-            if (cardId === card.getAttribute('data-card-id')) {
-                card.remove();
-                dataHandler.deleteCard(cardId);
-            }
-        }
+        let modalContent = document.getElementById("archived-cards-container");
+        modalContent.removeChild(document.getElementById(`archived-card-${cardId}`));
+        dataHandler.deleteCard(cardId);
+
     },
     restoreArchivedCard: function (clickEvent) {
         const cardId = clickEvent.target.dataset.cardId;

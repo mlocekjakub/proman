@@ -32,7 +32,7 @@ function openedBoardContent(board) {
   <div class="row bg-light" id="header-Row" data-board-id="${board.id}">
       <div class="col h3 margin_header" id="board-title" data-board-id="${board.id}">${board.title}
     </div>
-    <div class="col-md-auto margin_header mr-0"><button type="button" data-board-id="${board.id}" class="btn btn-outline-dark btn-sm" id="add-card">+ Add Card</button>
+    <div class="col-md-auto margin_header mr-0 p-0"><button type="button" data-board-id="${board.id}" class="btn btn-outline-dark btn-sm" id="add-card">+ Add Card</button>
     </div>
     <div class="col-md-auto margin_header mr-0"><button type="button" data-board-id="${board.id}" class="btn btn-outline-dark btn-sm" id="archived-cards-button">Archived cards</button></div>
     <div class="col-md-auto margin_header mr-0"><button type="button" data-board-id="${board.id}" class="btn btn-outline-dark btn-sm" id="add-column">+ Add Column</button></div>
