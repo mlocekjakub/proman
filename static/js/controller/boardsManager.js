@@ -277,13 +277,18 @@ async function openArchiveCardsModal(e) {
     let archivedCardsModal = document.getElementById("archived-cards-modal");
     let archivedCards = await dataHandler.getArchivedCardsByBoard(boardId);
     for (let cardData of archivedCards) {
-        let card = `<div class="row">
-                        <div class="col cards border border-success rounded">${cardData.title}</div>
-                        <div class="col" style="justify-content: right">
-                            <button type="button" class="btn btn-outline-dark btn-sm" id="restore-button" data-card-id=${cardData.id}>Restore</button>
-                            <button type="button" class="btn btn-outline-dark btn-sm" id="delete-button" data-card-id=${cardData.id}>Delete</button>
+        let card = `<div style="margin-bottom: 2vh">
+                        <div class="row">
+                        <div class="col cards border border-success rounded" style="margin-left: 1vh; margin-right: 1vh;">${cardData.title}</div>
                         </div>
-                    </div>`;
+                        <div class="row">
+                        <div class="col">
+                            <button type="button" class="btn btn-light btn-sm" id="restore-button" data-card-id=${cardData.id}>Restore</button>
+                            <button type="button" style="margin-right: 1vh;" class="btn btn-light btn-sm" id="delete-button" data-card-id=${cardData.id}>Delete</button>
+                        </div>
+                        </div>
+                        </div>
+                  `;
         domManager.addChild("#archived-cards-container", card)
         domManager.addEventListener(`#restore-button[data-card-id="${cardData.id}"]`,
             "click",
