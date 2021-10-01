@@ -27,7 +27,7 @@ DROP TABLE IF EXISTS cards;
 
 CREATE TABLE statuses (
     id       SERIAL PRIMARY KEY     NOT NULL,
-    title    VARCHAR(200)           NOT NULL,
+    title    VARCHAR(200),
     board_id INTEGER                NOT NULL
 );
 

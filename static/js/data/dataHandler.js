@@ -35,8 +35,10 @@ export let dataHandler = {
         let title = document.getElementById("board-title")
         let isPrivate = document.getElementById('private')
         let owner = null
-        if (isPrivate.checked) {
-            owner = localStorage.getItem('login')
+        if (isPrivate) {
+            if (isPrivate.checked) {
+                owner = localStorage.getItem('login')
+            }
         }
         let boardHeader = document.getElementById("exampleModalLabel")
         const form = e.currentTarget
@@ -103,7 +105,7 @@ export let dataHandler = {
         let boardId = board.getAttribute("data-board-id")
         const url = "/api/boards/columns";
         let data = {"boardId": boardId}
-        if(localStorage.getItem("change-title")==="False") {
+        if (localStorage.getItem("change-title") === "False") {
             try {
                 await apiPost(url, data)
                     .then(() => {
@@ -142,8 +144,7 @@ export let dataHandler = {
                     localStorage.setItem('login', res[1])
                     if (!res[0]) {
                         notValidInputInfo.hidden = false
-                    }
-                    else {
+                    } else {
                         $(loginModal).modal('hide')
                         registerInfo.innerHTML = "Successfully logged in"
                         $(informationModal).modal()
@@ -185,8 +186,7 @@ export let dataHandler = {
                         registerInfo.innerHTML = "Successfully registered"
                         $(informationModal).modal();
                         notValidInputInfo.hidden = true
-                    }
-                    else {
+                    } else {
                         notValidInputInfo.hidden = false
                     }
                 });
@@ -195,7 +195,7 @@ export let dataHandler = {
         }
 
     },
-    logout: async function(e) {
+    logout: async function (e) {
         e.preventDefault()
 
         await apiGet(`/api/logout`)
@@ -204,7 +204,7 @@ export let dataHandler = {
                 document.getElementById("navbar-buttons").innerHTML = ""
                 dataHandler.reloadBoards()
 
-        })
+            })
     },
     changeStatus: async function (cardId, data) {
         await apiPut(`/api/boards/cards/${cardId}`, data)
@@ -219,7 +219,7 @@ export let dataHandler = {
         await apiPut(`/api/boards/columns/name/${columnId}`, data)
     },
     deleteColumns: async function (columnId) {
-        await apiDelete(`/api/statuses/${columnId}`).then(()=>{
+        await apiDelete(`/api/statuses/${columnId}`).then(() => {
             dataHandler.reloadBoards()
         })
     }

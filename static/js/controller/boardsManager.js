@@ -8,15 +8,11 @@ export let boardsManager = {
 
   loadBoards: async function () {
     document.getElementById("navbar-buttons").innerHTML = ""
-    let navbarContent = "1"
+      let navbarBuilder = htmlFactory(htmlTemplates.logoutNavbar)
     if (localStorage.getItem('login')) {
-        const navbarBuilder = htmlFactory(htmlTemplates.loggedNavbar)
-        navbarContent = navbarBuilder()
+        navbarBuilder = htmlFactory(htmlTemplates.loggedNavbar)
     }
-    else {
-        const navbarBuilder = htmlFactory(htmlTemplates.logoutNavbar)
-        navbarContent = navbarBuilder()
-    }
+    let navbarContent =  navbarBuilder()
     domManager.addChild("#navbar-buttons", navbarContent)
     domManager.addEventListener(`#create-board-button`,
           "click",
@@ -241,11 +237,9 @@ function handleDrop(e) {
     div.parentNode.insertBefore(cardsManager.dragItem, div);
     let status_id = div.parentNode.getAttribute("data-column-id");
     let board_id = div.parentNode.getAttribute("data-board-id");
-    let card_order = null
+    let card_order = parseInt(div.previousSibling.getAttribute("data-cardorder-id")) + 1;
     if (div.nextSibling) {
         card_order = div.nextSibling.getAttribute("data-cardorder-id");
-    } else {
-        card_order = parseInt(div.previousSibling.getAttribute("data-cardorder-id")) + 1;
     }
     let card_id = cardsManager.dragItem.getAttribute("data-card-id");
     let data = {"status_id": status_id, "card_order": card_order, "board_id": board_id}
